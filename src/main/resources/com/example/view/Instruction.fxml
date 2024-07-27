@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="instruction-box" stylesheets="@/style/Main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controller.InstructionController">
+   <children>
+      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true">
+         <image>
+            <Image url="@../../../images/background/bg4.jpg" />
+         </image>
+      </ImageView>
+      <VBox alignment="TOP_CENTER" layoutX="87.0" layoutY="94.0" prefHeight="197.0" prefWidth="417.0" styleClass="v-box" stylesheets="@/style/Main.css">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" text="How to Play" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="30.0" layoutY="30.0" text=" " />
+            <Label contentDisplay="CENTER" layoutX="42.0" layoutY="191.0" text="        1. Type Your Username" />
+            <Label layoutX="42.0" layoutY="200.0" text="        2. Choose Your Spaceship " />
+            <Label layoutX="42.0" layoutY="214.0" text="        3. Move the Spaceship &amp; Hit the Objects" />
+            <Label layoutX="42.0" layoutY="228.0" text="        4. Game Duration: 30 seconds" />
+            <Label layoutX="42.0" layoutY="242.0" text="        5. End of Game" />
+            <Label layoutX="42.0" layoutY="256.0" text="        6. View Your Score on Leaderboard" />
+            <Label alignment="CENTER" layoutX="42.0" layoutY="270.0" text=" " />
+            <Label alignment="CENTER" layoutX="19.0" layoutY="130.0" text=" " />
+            <Label alignment="CENTER" layoutX="30.0" layoutY="128.0" text="Enjoy the game!" />
+         </children>
+      </VBox>
+      <Button fx:id="backToStart" alignment="CENTER" contentDisplay="CENTER" layoutX="242.0" layoutY="325.0" mnemonicParsing="false" onAction="#backToGame" styleClass="instruction-button" stylesheets="@/style/Main.css" text="Back to Start" textAlignment="CENTER" />
+   </children>
+</AnchorPane>

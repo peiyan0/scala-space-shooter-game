@@ -1,0 +1,61 @@
+* {
+    -fx-font-family: 'Lucida Console';
+}
+
+.button:hover {
+    cursor: hand;
+}
+.button:pressed{
+    -fx-scale-x: .95;
+    -fx-scale-y: .95;
+}
+
+.h-box {
+    -fx-background-color: #555;
+    -fx-opacity: .7;
+}
+.quit-button {
+    -fx-font-size: 14px;
+    -fx-min-width: 75;
+    -fx-min-height: 25;
+    -fx-background-color: #000;
+    -fx-text-fill: #fff;
+    -fx-border-radius: 15;
+}
+
+.h-box-button {
+    -fx-min-width: 200;
+    -fx-min-height: 75;
+    -fx-background-color: #121;
+    -fx-text-fill: #fff;
+    -fx-font-size: 20px;
+    -fx-padding: 10px;
+    -fx-background-radius: 15px;
+    -fx-transition: all 0.3s ease;
+}
+.h-box-button:hover {
+    -fx-font-size: 24px;
+    -fx-background-color: #111;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.instruction-box {
+    -fx-min-width: 500;
+    -fx-min-height: 300;
+}
+
+.instruction-button {
+    -fx-text-fill: #eedb00;
+    -fx-background-color: transparent;
+}
+
+.v-box  .label {
+    -fx-min-width: 400;
+    -fx-font-size: 14px;
+    -fx-background-color: transparent;
+    -fx-text-fill: #eedb00;
+    -fx-text-alignment: center;
+    -fx-alignment: center-left;
+    -fx-content-display: center;
+}
