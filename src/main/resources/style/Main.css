@@ -1,5 +1,6 @@
 * {
     -fx-font-family: 'Lucida Console';
+    -fx-text-fill: #eedb00;
 }
 
 .button:hover {
@@ -25,6 +26,7 @@
 }
 .quit-button:hover {
     -fx-background-color: #333;
+    cursor: hand;
 }
 
 .h-box-button {
@@ -42,6 +44,7 @@
     -fx-background-color: #111;
     -fx-scale-x: 1.1;
     -fx-scale-y: 1.1;
+    cursor: hand;
 }
 
 .instruction-box {
@@ -50,15 +53,18 @@
 }
 
 .instruction-button {
-    -fx-text-fill: #eedb00;
+    /*-fx-text-fill: #eedb00;*/
     -fx-background-color: transparent;
+}
+.instruction-button:hover {
+    cursor: hand;
 }
 
 .v-box  .label {
     -fx-min-width: 400;
     -fx-font-size: 14px;
     -fx-background-color: transparent;
-    -fx-text-fill: #eedb00;
+    /*-fx-text-fill: #eedb00;*/
     -fx-text-alignment: center;
     -fx-alignment: center-left;
     -fx-content-display: center;
@@ -66,4 +72,87 @@
 
 .mute-btn {
     -fx-background-color: transparent;
+}
+.mute-btn:hover {
+    cursor: hand;
+}
+
+.user-input-label {
+    /*-fx-text-fill: #eedb00;*/
+    -fx-text-alignment: center;
+    -fx-font-size: 20px;
+}
+
+.user-hbox {
+    -fx-min-width: 400;
+    -fx-alignment: center;
+}
+.user-hbox .button {
+    -fx-min-width: 100;
+    -fx-font-size: 14px;
+    -fx-padding: 20px;
+    -fx-transition: all 0.3s ease;
+}
+.user-hbox .button:hover {
+    -fx-font-size: 18px;
+}
+
+.user-text-field {
+    -fx-min-width: 170;
+    -fx-text-fill: #000;
+}
+
+.choose-ship-label {
+    -fx-padding: 55px;
+}
+.choose-ship-btn {
+    -fx-font-size: 20px;
+}
+.choose-ship-left-right-btn {
+    -fx-background-color: transparent;
+    /*-fx-text-fill: #eedb00;*/
+    -fx-font-size: 50px;
+}
+.choose-ship-img {
+    -fx-border-width: 20px;
+    -fx-border-color: #eedb00;
+}
+
+.dialog-pane {
+    -fx-background-color: #222;
+    -fx-border-color: #555;
+    -fx-border-width: 2px;
+    -fx-padding: 10px;
+    -fx-min-height: 200px;
+}
+.dialog-pane *{
+    -fx-text-fill: #f0f0f0;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: #333;
+    -fx-text-fill: #f0f0f0;
+    -fx-font-size: 14pt;
+    -fx-padding: 10px;
+}
+
+.dialog-pane .content {
+    -fx-background-color: #222;
+    -fx-font-size: 10pt;
+    -fx-text-fill: #f0f0f0;
+    -fx-alignment: center;
+}
+
+.dialog-pane .button-bar {
+    -fx-background-color: #222;
+}
+
+.dialog-pane .button {
+    -fx-background-color: #000;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12pt;
+}
+.dialog-pane .button:hover {
+    -fx-text-fill: #eedb00;
 }

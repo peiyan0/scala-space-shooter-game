@@ -1,5 +1,6 @@
 package com.example
 
+import com.example.controller.MainMenuController
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
@@ -12,18 +13,15 @@ import scalafx.scene.media.{Media, MediaPlayer}
 
 object MainApp extends JFXApp {
   val rootResource = getClass.getResourceAsStream("/com/example/view/RootLayout.fxml")
-  require(rootResource != null, "RootLayout.fxml not found")
   val loader = new FXMLLoader(null, NoDependencyResolver)
   loader.load(rootResource)
   val roots = loader.getRoot[jfxs.layout.BorderPane]
   val cssResource = getClass.getResource("/style/Main.css")
-  require(cssResource != null, "Main.css not found")
   roots.stylesheets = List(cssResource.toExternalForm)
 
   val backgroundMusic = new Media(getClass.getResource("/sounds/MainBg.mp3").toString)
   val mediaPlayer = new MediaPlayer(backgroundMusic)
   mediaPlayer.setCycleCount(MediaPlayer.Indefinite) // Loop indefinitely
-
 
   stage = new PrimaryStage {
     title = "Spaceship Game"
@@ -36,19 +34,19 @@ object MainApp extends JFXApp {
 
   def showMainMenu(): Unit = {
     val resource = getClass.getResourceAsStream("/com/example/view/MainMenuLayout.fxml")
-    require(resource != null, "MainMenuLayout.fxml not found") // Ensure the resource is found
     val loader = new FXMLLoader(null, NoDependencyResolver)
     loader.load(resource)
     val roots = loader.getRoot[jfxs.layout.AnchorPane]
     roots.stylesheets = List(cssResource.toExternalForm)
     this.roots.setCenter(roots)
 
-    val mainMenuController = loader.getController[com.example.controller.MainMenuController#Controller]()
+    val mainMenuController = loader.getController[MainMenuController#Controller]()
     mainMenuController.stage = stage
 
     if (mediaPlayer.getStatus != Status.PLAYING) {
       mediaPlayer.play()
     }
   }
+
   showMainMenu()
 }

@@ -3,11 +3,10 @@ package com.example.controller
 import com.example.MainApp
 import scalafx.event.ActionEvent
 import scalafx.scene.control.Button
-import scalafx.scene.layout.AnchorPane
-import scalafx.stage.Stage
+import scalafx.stage.{Modality, Stage}
 import scalafxml.core.macros.sfxml
 import javafx.{scene => jfxs}
-import scalafx.scene.Scene
+import scalafx.scene.{Parent, Scene}
 import scalafx.Includes._
 import scalafx.scene.image.{Image, ImageView}
 import scalafxml.core.{FXMLLoader, NoDependencyResolver}
@@ -30,9 +29,9 @@ class MainMenuController(
   }
 
   def showInstruction(event: ActionEvent): Unit = {
-    val resource = getClass.getResource("/com/example/view/instruction.fxml")
+    val resource = getClass.getResource("/com/example/view/InstructionLayout.fxml")
     val loader = new FXMLLoader(resource, NoDependencyResolver)
-    val root = loader.load[jfxs.layout.AnchorPane] // or appropriate root type
+    val root = loader.load[jfxs.layout.AnchorPane]
 
     val controller = loader.getController[InstructionController#Controller]()
 
@@ -48,9 +47,9 @@ class MainMenuController(
   }
 
   def showLeaderboard(event: ActionEvent): Unit = {
-    val resource = getClass.getResource("/com/example/view/leaderboard.fxml")
+    val resource = getClass.getResource("/com/example/view/LeaderboardLayout.fxml")
     val loader = new FXMLLoader(resource, NoDependencyResolver)
-    val root = loader.load[jfxs.layout.AnchorPane] // or appropriate root type
+    val root = loader.load[jfxs.layout.AnchorPane]
 
     val controller = loader.getController[LeaderboardController#Controller]()
 
@@ -80,5 +79,23 @@ class MainMenuController(
   private def updateMuteButtons(): Unit = {
     unmuteBtn.visible = !isMuted
     muteBtn.visible = isMuted
+  }
+
+  def handleStartAction(event: ActionEvent): Unit = {
+    val resource = getClass.getResource("/com/example/view/UserInputLayout.fxml")
+    val loader = new FXMLLoader(resource, NoDependencyResolver)
+    loader.load()
+    val root: Parent = loader.getRoot[jfxs.Parent]
+
+    val dialogStage = new Stage() {
+      initModality(Modality.ApplicationModal)
+      initOwner(stage)
+      scene = new Scene(root)
+    }
+
+    val controller = loader.getController[UserInputController#Controller]()
+    controller.stage = stage
+    controller.dialogStage = dialogStage
+    dialogStage.showAndWait()
   }
 }
