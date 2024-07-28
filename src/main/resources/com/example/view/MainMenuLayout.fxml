@@ -38,5 +38,23 @@
          </children>
       </HBox>
       <Button fx:id="quitBtn" layoutX="35.0" layoutY="21.0" mnemonicParsing="false" onAction="#quitGame" styleClass="quit-button" stylesheets="@/style/Main.css" text="Quit" />
+      <Button fx:id="muteBtn" layoutX="1151.0" layoutY="640.0" mnemonicParsing="false" onAction="#handleUnmuteAction" visible="false" styleClass="mute-btn" stylesheets="@/style/Main.css">
+         <graphic>
+            <ImageView fx:id="muteIcon" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="file:/D:/py/prg/BSE/S5/PRG2104(OOP)/finalprojectv2-peiyan0/src/main/resources/images/icons/mute.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <Button fx:id="unmuteBtn" layoutX="1151.0" layoutY="640.0" mnemonicParsing="false" onAction="#handleMuteAction" visible="true" styleClass="mute-btn" stylesheets="@/style/Main.css">
+         <graphic>
+            <ImageView fx:id="unmuteIcon" fitHeight="31.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="file:/D:/py/prg/BSE/S5/PRG2104(OOP)/finalprojectv2-peiyan0/src/main/resources/images/icons/unmute.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
    </children>
 </AnchorPane>

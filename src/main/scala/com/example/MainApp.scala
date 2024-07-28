@@ -7,6 +7,8 @@ import scalafx.Includes._
 import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 import javafx.{scene => jfxs}
 import scalafx.scene.image.Image
+import scalafx.scene.media.MediaPlayer.Status
+import scalafx.scene.media.{Media, MediaPlayer}
 
 object MainApp extends JFXApp {
   val rootResource = getClass.getResourceAsStream("/com/example/view/RootLayout.fxml")
@@ -17,6 +19,11 @@ object MainApp extends JFXApp {
   val cssResource = getClass.getResource("/style/Main.css")
   require(cssResource != null, "Main.css not found")
   roots.stylesheets = List(cssResource.toExternalForm)
+
+  val backgroundMusic = new Media(getClass.getResource("/sounds/MainBg.mp3").toString)
+  val mediaPlayer = new MediaPlayer(backgroundMusic)
+  mediaPlayer.setCycleCount(MediaPlayer.Indefinite) // Loop indefinitely
+
 
   stage = new PrimaryStage {
     title = "Spaceship Game"
@@ -38,6 +45,10 @@ object MainApp extends JFXApp {
 
     val mainMenuController = loader.getController[com.example.controller.MainMenuController#Controller]()
     mainMenuController.stage = stage
+
+    if (mediaPlayer.getStatus != Status.PLAYING) {
+      mediaPlayer.play()
+    }
   }
   showMainMenu()
 }

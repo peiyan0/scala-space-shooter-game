@@ -21,6 +21,10 @@
     -fx-background-color: #000;
     -fx-text-fill: #fff;
     -fx-border-radius: 15;
+    -fx-transition: all 0.3s ease;
+}
+.quit-button:hover {
+    -fx-background-color: #333;
 }
 
 .h-box-button {
@@ -58,4 +62,8 @@
     -fx-text-alignment: center;
     -fx-alignment: center-left;
     -fx-content-display: center;
+}
+
+.mute-btn {
+    -fx-background-color: transparent;
 }
