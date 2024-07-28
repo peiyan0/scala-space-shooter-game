@@ -8,6 +8,7 @@ import scalafxml.core.macros.sfxml
 import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 import javafx.{scene => jfxs}
 import scalafx.scene.Scene
+import scalafx.scene.layout.{AnchorPane, StackPane}
 
 @sfxml
 class UserInputController(private val usernameField: TextField) {
@@ -29,7 +30,10 @@ class UserInputController(private val usernameField: TextField) {
     val loader = new FXMLLoader(resource, NoDependencyResolver)
     loader.load()
     val root: jfxs.Parent = loader.getRoot[jfxs.Parent]
-    stage.scene = new Scene(root)
+    val scalafxRoot = new StackPane()
+    scalafxRoot.getChildren.add(root)
+    stage.scene = new Scene(scalafxRoot)
+
 
     val controller = loader.getController[SpaceshipSelectionController#Controller]()
     controller.stage = stage
