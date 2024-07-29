@@ -12,7 +12,7 @@ import scalafxml.core.macros.sfxml
 import scalafx.Includes._
 
 import scala.collection.mutable.ListBuffer
-import com.example.model.Enemy
+import com.example.model.{EnemyModel, LaserModel}
 
 import scala.concurrent.duration.DurationDouble
 
@@ -24,8 +24,8 @@ class GameController(private val gamePane: Pane,
 
   private var score = 0
   private var gameRunning = false
-  private var lasers: ListBuffer[ImageView] = ListBuffer()
-  private var enemies: ListBuffer[Enemy] = ListBuffer()
+  private var lasers: ListBuffer[LaserModel] = ListBuffer()
+  private var enemies: ListBuffer[EnemyModel] = ListBuffer()
   private val laserInterval = 0.5.second
   private val enemySpawnInterval = 1.second
   private var lastLaserTime = 0L
@@ -94,28 +94,28 @@ class GameController(private val gamePane: Pane,
   }
 
   private def fireLaser(): Unit = {
-    val laser1 = new ImageView(new Image(getClass.getResourceAsStream("/images/effect/laser.png")))
-    val laser2 = new ImageView(new Image(getClass.getResourceAsStream("/images/effect/laser.png")))
+    val laser1 = new LaserModel("/images/effect/laser.png")
+    val laser2 = new LaserModel("/images/effect/laser.png")
 
-    // Adjusting laser size
-    laser1.fitWidth = 20
-    laser1.fitHeight = 60
-    laser2.fitWidth = 20
-    laser2.fitHeight = 60
+    // laser size
+    laser1.imageView.fitWidth = 20
+    laser1.imageView.fitHeight = 60
+    laser2.imageView.fitWidth = 20
+    laser2.imageView.fitHeight = 60
 
     // Positioning the lasers
-    laser1.layoutX = spaceshipImageView.layoutX.value + 10
-    laser2.layoutX = spaceshipImageView.layoutX.value + spaceshipImageView.boundsInParent.value.getWidth - 15
-    laser1.layoutY = spaceshipImageView.layoutY.value
-    laser2.layoutY = spaceshipImageView.layoutY.value
+    laser1.imageView.layoutX = spaceshipImageView.layoutX.value + 10
+    laser2.imageView.layoutX = spaceshipImageView.layoutX.value + spaceshipImageView.boundsInParent.value.getWidth - 15
+    laser1.imageView.layoutY = spaceshipImageView.layoutY.value
+    laser2.imageView.layoutY = spaceshipImageView.layoutY.value
 
     lasers += laser1
     lasers += laser2
-    gamePane.children.addAll(laser1, laser2)
+    gamePane.children.addAll(laser1.imageView, laser2.imageView)
   }
 
   private def spawnEnemy(): Unit = {
-    val enemy = new Enemy("/images/enemy/enemy.png")
+    val enemy = new EnemyModel("/images/enemy/enemy.png")
 
     enemy.imageView.fitWidth = 100
     enemy.imageView.preserveRatio = true
@@ -130,9 +130,9 @@ class GameController(private val gamePane: Pane,
 
   private def updateLasers(): Unit = {
     lasers.foreach { laser =>
-      laser.layoutY.value -= 5
+      laser.imageView.layoutY.value -= 5
     }
-    lasers = lasers.filter(_.layoutY.value > 0)
+    lasers = lasers.filter(_.imageView.layoutY.value > 0)
     gamePane.children.removeIf(laser => laser.layoutY.value <= 0)
   }
 
@@ -153,12 +153,12 @@ class GameController(private val gamePane: Pane,
   private def checkCollisions(): Unit = {
     lasers.foreach { laser =>
       enemies.foreach { enemy =>
-        if (laser.boundsInParent.value.intersects(enemy.imageView.boundsInParent.value)) {
+        if (laser.imageView.boundsInParent.value.intersects(enemy.imageView.boundsInParent.value)) {
           score += 10
           scoreLabel.text = s"Score: $score"
           lasers -= laser
           enemies -= enemy
-          gamePane.children.removeAll(laser, enemy.imageView)
+          gamePane.children.removeAll(laser.imageView, enemy.imageView)
         }
       }
     }
