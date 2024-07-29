@@ -1,8 +1,7 @@
 package com.example.controller
 
 import scalafx.beans.property.StringProperty
-import scalafx.scene.image.Image
-import scalafx.scene.image.ImageView
+import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.control.Label
 import scalafx.scene.layout.Pane
@@ -11,8 +10,11 @@ import scalafx.animation.{AnimationTimer, KeyFrame, Timeline}
 import scalafx.util.Duration
 import scalafxml.core.macros.sfxml
 import scalafx.Includes._
+
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.duration.{DurationDouble, DurationInt}
+import com.example.model.Enemy
+
+import scala.concurrent.duration.DurationDouble
 
 @sfxml
 class GameController(private val gamePane: Pane,
@@ -23,7 +25,7 @@ class GameController(private val gamePane: Pane,
   private var score = 0
   private var gameRunning = false
   private var lasers: ListBuffer[ImageView] = ListBuffer()
-  private var enemies: ListBuffer[ImageView] = ListBuffer()
+  private var enemies: ListBuffer[Enemy] = ListBuffer()
   private val laserInterval = 0.5.second
   private val enemySpawnInterval = 1.second
   private var lastLaserTime = 0L
@@ -113,20 +115,18 @@ class GameController(private val gamePane: Pane,
   }
 
   private def spawnEnemy(): Unit = {
-    val enemy = new ImageView(new Image(getClass.getResourceAsStream("/images/enemy/enemy.png")))
+    val enemy = new Enemy("/images/enemy/enemy.png")
 
-    enemy.fitWidth = 100
-    enemy.preserveRatio = true
+    enemy.imageView.fitWidth = 100
+    enemy.imageView.preserveRatio = true
 
-    val maxX = gamePane.width.value - enemy.fitWidth.value
+    val maxX = gamePane.width.value - enemy.imageView.fitWidth.value
     val randomX = math.random() * maxX
-    enemy.layoutX = randomX
-    enemy.layoutY = 100
+    enemy.setPosition(randomX, 100)
 
     enemies += enemy
-    gamePane.children.add(enemy)
+    gamePane.children.add(enemy.imageView)
   }
-
 
   private def updateLasers(): Unit = {
     lasers.foreach { laser =>
@@ -138,21 +138,27 @@ class GameController(private val gamePane: Pane,
 
   private def updateEnemies(): Unit = {
     enemies.foreach { enemy =>
-      enemy.layoutY.value += 2
+      val (x, y) = enemy.getPosition
+      enemy.setPosition(x, y + 2)
     }
-    enemies = enemies.filter(_.layoutY.value < gamePane.height.value)
-    gamePane.children.removeIf(enemy => enemy.layoutY.value >= gamePane.height.value)
+    enemies = enemies.filter { enemy =>
+      val (_, y) = enemy.getPosition
+      y < gamePane.height.value
+    }
+    gamePane.children.removeIf(node =>
+      enemies.exists(enemy => node == enemy.imageView && enemy.getPosition._2 >= gamePane.height.value)
+    )
   }
 
   private def checkCollisions(): Unit = {
     lasers.foreach { laser =>
       enemies.foreach { enemy =>
-        if (laser.boundsInParent.value.intersects(enemy.boundsInParent.value)) {
+        if (laser.boundsInParent.value.intersects(enemy.imageView.boundsInParent.value)) {
           score += 10
           scoreLabel.text = s"Score: $score"
           lasers -= laser
           enemies -= enemy
-          gamePane.children.removeAll(laser, enemy)
+          gamePane.children.removeAll(laser, enemy.imageView)
         }
       }
     }
@@ -163,5 +169,6 @@ class GameController(private val gamePane: Pane,
     println(s"Game over! Your score: $score")
     countdownLabel.text = s"Game over! Your score: $score"
   }
+
   initialize()
 }
