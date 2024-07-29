@@ -25,7 +25,7 @@ class GameController(private val gamePane: Pane,
   private var gameRunning = false
   private var lasers: ListBuffer[LaserModel] = ListBuffer()
   private var enemies: ListBuffer[EnemyModel] = ListBuffer()
-  private val laserInterval = 0.25.second
+  private val laserInterval = 0.5.second
   private val enemySpawnInterval = 0.5.second
   private var lastLaserTime = 0L
   private var lastEnemySpawnTime = 0L

@@ -99,7 +99,26 @@
 
 .user-text-field {
     -fx-min-width: 170;
-    -fx-text-fill: #000;
+    -fx-text-fill: #fff;
+    -fx-font-size: 11px;
+    -fx-background-color: #333;
+    -fx-transition: all 0.3s ease;
+}
+
+.difficulty-bar {
+    -fx-alignment: center;
+}
+.difficulty-btn {
+    -fx-background-color: #333;
+    -fx-padding: 10px;
+    -fx-text-fill: #fff;
+    -fx-transition: all 0.3s ease;
+}
+.difficulty-btn:hover, .user-text-field:hover {
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0.5, 0, 0);
+}
+.difficulty-btn:focused {
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 0, 0.8), 10, 0.5, 0, 0);
 }
 
 .choose-ship-label {
@@ -110,7 +129,6 @@
 }
 .choose-ship-left-right-btn {
     -fx-background-color: transparent;
-    /*-fx-text-fill: #eedb00;*/
     -fx-font-size: 50px;
 }
 .choose-ship-img {
