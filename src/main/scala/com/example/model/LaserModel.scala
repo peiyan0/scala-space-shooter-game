@@ -5,11 +5,14 @@ import scalafx.scene.image.{Image, ImageView}
 class LaserModel(val imagePath: String) {
   val imageView: ImageView = new ImageView(new Image(getClass.getResourceAsStream(imagePath)))
 
-  def move(): Unit = {
-    imageView.layoutY.value -= 5
+  def initialize(width: Double, height: Double, x: Double, y: Double): Unit = {
+    imageView.fitWidth = width
+    imageView.fitHeight = height
+    imageView.layoutX = x
+    imageView.layoutY = y
   }
 
-  def isOutOfBounds(gamePaneHeight: Double): Boolean = {
-    imageView.layoutY.value <= 0
+  def move(): Unit = {
+    imageView.layoutY.value -= 5
   }
 }

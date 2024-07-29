@@ -1,15 +1,18 @@
 package com.example.model
 
-import scalafx.scene.image.Image
-import scalafx.scene.image.ImageView
+import scalafx.scene.image.{Image, ImageView}
 
-class Enemy(val imagePath: String) {
+class EnemyModel(val imagePath: String) {
   val imageView: ImageView = new ImageView(new Image(getClass.getResourceAsStream(imagePath)))
 
-  def setPosition(x: Double, y: Double): Unit = {
+  def initialize(width: Double, x: Double, y: Double): Unit = {
+    imageView.fitWidth = width
+    imageView.preserveRatio = true
     imageView.layoutX = x
     imageView.layoutY = y
   }
 
-  def getPosition: (Double, Double) = (imageView.layoutX.value, imageView.layoutY.value)
+  def move(): Unit = {
+    imageView.layoutY.value += 2
+  }
 }

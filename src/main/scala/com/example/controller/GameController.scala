@@ -10,11 +10,10 @@ import scalafx.animation.{AnimationTimer, KeyFrame, Timeline}
 import scalafx.util.Duration
 import scalafxml.core.macros.sfxml
 import scalafx.Includes._
-
 import scala.collection.mutable.ListBuffer
-import com.example.model.{EnemyModel, LaserModel}
-
 import scala.concurrent.duration.DurationDouble
+
+import com.example.model.{EnemyModel, LaserModel}
 
 @sfxml
 class GameController(private val gamePane: Pane,
@@ -26,8 +25,8 @@ class GameController(private val gamePane: Pane,
   private var gameRunning = false
   private var lasers: ListBuffer[LaserModel] = ListBuffer()
   private var enemies: ListBuffer[EnemyModel] = ListBuffer()
-  private val laserInterval = 0.5.second
-  private val enemySpawnInterval = 1.second
+  private val laserInterval = 0.25.second
+  private val enemySpawnInterval = 0.5.second
   private var lastLaserTime = 0L
   private var lastEnemySpawnTime = 0L
   private var remainingTime = 30
@@ -97,17 +96,8 @@ class GameController(private val gamePane: Pane,
     val laser1 = new LaserModel("/images/effect/laser.png")
     val laser2 = new LaserModel("/images/effect/laser.png")
 
-    // laser size
-    laser1.imageView.fitWidth = 20
-    laser1.imageView.fitHeight = 60
-    laser2.imageView.fitWidth = 20
-    laser2.imageView.fitHeight = 60
-
-    // Positioning the lasers
-    laser1.imageView.layoutX = spaceshipImageView.layoutX.value + 10
-    laser2.imageView.layoutX = spaceshipImageView.layoutX.value + spaceshipImageView.boundsInParent.value.getWidth - 15
-    laser1.imageView.layoutY = spaceshipImageView.layoutY.value
-    laser2.imageView.layoutY = spaceshipImageView.layoutY.value
+    laser1.initialize(20, 60, spaceshipImageView.layoutX.value + 10, spaceshipImageView.layoutY.value)
+    laser2.initialize(20, 60, spaceshipImageView.layoutX.value + spaceshipImageView.boundsInParent.value.getWidth - 15, spaceshipImageView.layoutY.value)
 
     lasers += laser1
     lasers += laser2
@@ -116,37 +106,25 @@ class GameController(private val gamePane: Pane,
 
   private def spawnEnemy(): Unit = {
     val enemy = new EnemyModel("/images/enemy/enemy.png")
-
-    enemy.imageView.fitWidth = 100
-    enemy.imageView.preserveRatio = true
-
-    val maxX = gamePane.width.value - enemy.imageView.fitWidth.value
+    val maxX = gamePane.width.value - 100
     val randomX = math.random() * maxX
-    enemy.setPosition(randomX, 100)
+    enemy.initialize(100, randomX, 100)
 
     enemies += enemy
     gamePane.children.add(enemy.imageView)
   }
 
   private def updateLasers(): Unit = {
-    lasers.foreach { laser =>
-      laser.imageView.layoutY.value -= 5
-    }
+    lasers.foreach(_.move())
     lasers = lasers.filter(_.imageView.layoutY.value > 0)
     gamePane.children.removeIf(laser => laser.layoutY.value <= 0)
   }
 
   private def updateEnemies(): Unit = {
-    enemies.foreach { enemy =>
-      val (x, y) = enemy.getPosition
-      enemy.setPosition(x, y + 2)
-    }
-    enemies = enemies.filter { enemy =>
-      val (_, y) = enemy.getPosition
-      y < gamePane.height.value
-    }
+    enemies.foreach(_.move())
+    enemies = enemies.filter(_.imageView.layoutY.value < gamePane.height.value)
     gamePane.children.removeIf(node =>
-      enemies.exists(enemy => node == enemy.imageView && enemy.getPosition._2 >= gamePane.height.value)
+      enemies.exists(enemy => node == enemy.imageView && enemy.imageView.layoutY.value >= gamePane.height.value)
     )
   }
 
