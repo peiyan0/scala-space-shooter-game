@@ -14,6 +14,7 @@ import scalafx.scene.layout.StackPane
 class SpaceshipSelectionController(private val spaceshipImageView: ImageView) {
   var stage: Stage = _
   val selectedSpaceship = new StringProperty(this, "selectedSpaceship", "")
+  private var difficulty: String = _
 
   private val spaceshipImages = List(
     "/images/spaceship/ship1.png",
@@ -25,6 +26,10 @@ class SpaceshipSelectionController(private val spaceshipImageView: ImageView) {
   )
   private var currentIndex = 0
   updateSpaceshipImage()
+
+  def setDifficulty(difficulty: String): Unit = {
+    this.difficulty = difficulty
+  }
 
   def handleLeftAction(event: ActionEvent): Unit = {
     currentIndex = (currentIndex - 1 + spaceshipImages.length) % spaceshipImages.length
@@ -60,6 +65,7 @@ class SpaceshipSelectionController(private val spaceshipImageView: ImageView) {
     val controller = loader.getController[GameController#Controller]()
     controller.stage = stage
     controller.selectedSpaceship.bind(selectedSpaceship)
+    controller.setDifficulty(difficulty)
   }
 
   def handleSpaceshipSelection(spaceship: String): Unit = {

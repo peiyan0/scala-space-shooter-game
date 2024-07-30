@@ -13,15 +13,15 @@ import scalafx.scene.layout.{AnchorPane, StackPane}
 
 @sfxml
 class UserInputController(
-   private val usernameField: TextField,
-   private val easyBtn: Button,
-   private val mediumBtn: Button,
-   private val hardBtn: Button
+                           private val usernameField: TextField,
+                           private val easyBtn: Button,
+                           private val mediumBtn: Button,
+                           private val hardBtn: Button
                          ) {
 
   var stage: Stage = _
   var dialogStage: Stage = _
-  private var difficulty: String = _
+  private var difficulty: String = "EASY"
 
   // Initialize the difficulty buttons
   easyBtn.setOnAction((e: ActionEvent) => handleDifficultyAction("EASY"))
@@ -50,9 +50,10 @@ class UserInputController(
 
     val controller = loader.getController[SpaceshipSelectionController#Controller]()
     controller.stage = stage
+    controller.setDifficulty(difficulty)  // Pass the difficulty to the next controller
   }
 
-   private def handleDifficultyAction(selectedDifficulty: String): Unit = {
+  private def handleDifficultyAction(selectedDifficulty: String): Unit = {
     difficulty = selectedDifficulty
   }
 }

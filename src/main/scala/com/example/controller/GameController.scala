@@ -25,8 +25,8 @@ class GameController(private val gamePane: Pane,
   private var gameRunning = false
   private var lasers: ListBuffer[LaserModel] = ListBuffer()
   private var enemies: ListBuffer[EnemyModel] = ListBuffer()
-  private val laserInterval = 0.5.second
-  private val enemySpawnInterval = 0.5.second
+  private var laserInterval = 0.25.second
+  private var enemySpawnInterval = 0.1.second
   private var lastLaserTime = 0L
   private var lastEnemySpawnTime = 0L
   private var remainingTime = 30
@@ -38,6 +38,20 @@ class GameController(private val gamePane: Pane,
     selectedSpaceship.onChange((_, _, newValue) => updateSpaceshipImage(newValue))
     gamePane.onMouseMoved = handleSpaceshipMovement _
     startGame()
+  }
+
+  def setDifficulty(difficulty: String): Unit = {
+    difficulty match {
+      case "EASY" =>
+        laserInterval = 0.5.second
+        enemySpawnInterval = 0.5.second
+      case "MEDIUM" =>
+        laserInterval = 0.5.second
+        enemySpawnInterval = 0.25.second
+      case "HARD" =>
+        laserInterval = 0.25.second
+        enemySpawnInterval = 0.1.second
+    }
   }
 
   private def updateSpaceshipImage(spaceship: String): Unit = {
