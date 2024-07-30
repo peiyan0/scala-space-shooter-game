@@ -55,6 +55,7 @@ class MainMenuController(
 
     val leaderboardStage = new Stage {
       title.value = "Leaderboard"
+      icons += new Image(getClass.getResourceAsStream("/images/icons/leaderboard.png"))
       scene = new Scene(root)
     }
 
@@ -88,6 +89,8 @@ class MainMenuController(
     val root: Parent = loader.getRoot[jfxs.Parent]
 
     val dialogStage = new Stage() {
+      title = "Spaceship Game"
+      icons += new Image(getClass.getResourceAsStream("/images/spaceship/ship1.png"))
       initModality(Modality.ApplicationModal)
       initOwner(stage)
       scene = new Scene(root)
