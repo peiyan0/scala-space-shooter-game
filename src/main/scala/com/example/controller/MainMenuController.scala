@@ -16,9 +16,7 @@ import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 class MainMenuController(
                           var stage: Stage,
                           private val unmuteBtn: Button,
-                          private val muteBtn: Button,
-                          private val unmuteIcon: ImageView,
-                          private val muteIcon: ImageView
+                          private val muteBtn: Button
                         ) {
 
   def quitGame(event: ActionEvent): Unit = {
@@ -62,11 +60,11 @@ class MainMenuController(
   }
 
   def handleMuteAction(event: ActionEvent): Unit = {
-    AudioUtils.handleMuteAction(muteBtn, unmuteBtn)
+    AudioUtil.handleMuteAction(muteBtn, unmuteBtn)
   }
 
   def handleUnmuteAction(event: ActionEvent): Unit = {
-    AudioUtils.handleUnmuteAction(muteBtn, unmuteBtn)
+    AudioUtil.handleUnmuteAction(muteBtn, unmuteBtn)
   }
 
   def handleStartAction(event: ActionEvent): Unit = {
