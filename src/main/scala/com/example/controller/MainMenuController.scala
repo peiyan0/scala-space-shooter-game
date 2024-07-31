@@ -9,7 +9,7 @@ import scalafxml.core.macros.sfxml
 import javafx.{scene => jfxs}
 import scalafx.scene.{Parent, Scene}
 import scalafx.Includes._
-import scalafx.scene.image.{Image, ImageView}
+import scalafx.scene.image.Image
 import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 
 @sfxml
