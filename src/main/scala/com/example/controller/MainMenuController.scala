@@ -1,6 +1,7 @@
 package com.example.controller
 
 import com.example.MainApp
+import com.example.util.AudioUtil
 import scalafx.event.ActionEvent
 import scalafx.scene.control.Button
 import scalafx.stage.{Modality, Stage}
@@ -13,16 +14,12 @@ import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 
 @sfxml
 class MainMenuController(
-    var stage: Stage,
-    private val unmuteBtn: Button,
-    private val muteBtn: Button,
-    private val unmuteIcon: ImageView,
-    private val muteIcon: ImageView
-  ) {
-
-  private var isMuted = false
-  unmuteBtn.visible = true
-  muteBtn.visible = false
+                          var stage: Stage,
+                          private val unmuteBtn: Button,
+                          private val muteBtn: Button,
+                          private val unmuteIcon: ImageView,
+                          private val muteIcon: ImageView
+                        ) {
 
   def quitGame(event: ActionEvent): Unit = {
     stage.close() // Close the main stage
@@ -64,22 +61,12 @@ class MainMenuController(
     leaderboardStage.show()
   }
 
-
   def handleMuteAction(event: ActionEvent): Unit = {
-    isMuted = true
-    MainApp.mediaPlayer.setMute(isMuted)
-    updateMuteButtons()
+    AudioUtils.handleMuteAction(muteBtn, unmuteBtn)
   }
 
   def handleUnmuteAction(event: ActionEvent): Unit = {
-    isMuted = false
-    MainApp.mediaPlayer.setMute(isMuted)
-    updateMuteButtons()
-  }
-
-  private def updateMuteButtons(): Unit = {
-    unmuteBtn.visible = !isMuted
-    muteBtn.visible = isMuted
+    AudioUtils.handleUnmuteAction(muteBtn, unmuteBtn)
   }
 
   def handleStartAction(event: ActionEvent): Unit = {

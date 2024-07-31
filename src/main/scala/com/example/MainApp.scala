@@ -21,7 +21,7 @@ object MainApp extends JFXApp {
 
   val backgroundMusic = new Media(getClass.getResource("/sounds/MainBg.mp3").toString)
   val mediaPlayer = new MediaPlayer(backgroundMusic)
-  mediaPlayer.setCycleCount(MediaPlayer.Indefinite) // Loop indefinitely
+  mediaPlayer.setCycleCount(MediaPlayer.Indefinite)
 
   stage = new PrimaryStage {
     title = "Spaceship Game"
