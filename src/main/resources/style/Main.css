@@ -114,7 +114,9 @@
     -fx-text-fill: #fff;
     -fx-transition: all 0.3s ease;
 }
-.difficulty-btn:hover, .user-text-field:hover {
+.difficulty-btn:hover,
+.user-text-field:hover,
+.pause-window-btn:hover {
     -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0.5, 0, 0);
 }
 .difficulty-btn:focused {
@@ -173,4 +175,30 @@
 }
 .dialog-pane .button:hover {
     -fx-text-fill: #eedb00;
+}
+
+.pause-window-btn {
+    -fx-min-height: 60px;
+    -fx-min-width: 180px;
+    -fx-font-size: 14px;
+    -fx-background-radius: 15px;
+    -fx-text-alignment: center;
+    -fx-background-color: #202020;
+    -fx-transition: all 0.3s ease;
+    -fx-text-fill: #fff;
+}
+.pause-panel {
+    -fx-background-color: #333;
+    -fx-background-radius: 25px;
+}
+.pause-label {
+    -fx-font-size: 32px;
+    -fx-text-fill: #fff;
+    -fx-background-color: #555;
+    -fx-label-padding: 10px 180px;
+    -fx-background-radius: 10px;
+}
+
+.pause-btn {
+    -fx-background-color: transparent;
 }
