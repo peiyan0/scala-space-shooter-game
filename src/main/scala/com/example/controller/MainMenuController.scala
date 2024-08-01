@@ -1,6 +1,5 @@
 package com.example.controller
 
-import com.example.MainApp
 import com.example.util.AudioUtil
 import scalafx.event.ActionEvent
 import scalafx.scene.control.Button
@@ -20,7 +19,7 @@ class MainMenuController(
                         ) {
 
   def quitGame(event: ActionEvent): Unit = {
-    stage.close() // Close the main stage
+    stage.close()
   }
 
   def showInstruction(event: ActionEvent): Unit = {
@@ -59,14 +58,6 @@ class MainMenuController(
     leaderboardStage.show()
   }
 
-  def handleMuteAction(event: ActionEvent): Unit = {
-    AudioUtil.handleMuteAction(muteBtn, unmuteBtn)
-  }
-
-  def handleUnmuteAction(event: ActionEvent): Unit = {
-    AudioUtil.handleUnmuteAction(muteBtn, unmuteBtn)
-  }
-
   def handleStartAction(event: ActionEvent): Unit = {
     val resource = getClass.getResource("/com/example/view/UserInputLayout.fxml")
     val loader = new FXMLLoader(resource, NoDependencyResolver)
@@ -85,5 +76,13 @@ class MainMenuController(
     controller.stage = stage
     controller.dialogStage = dialogStage
     dialogStage.showAndWait()
+  }
+
+  def handleMuteAction(event: ActionEvent): Unit = {
+    AudioUtil.handleMuteAction(muteBtn, unmuteBtn)
+  }
+
+  def handleUnmuteAction(event: ActionEvent): Unit = {
+    AudioUtil.handleUnmuteAction(muteBtn, unmuteBtn)
   }
 }
