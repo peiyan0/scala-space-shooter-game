@@ -3,27 +3,30 @@ package com.example.controller
 import scalafx.beans.property.StringProperty
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.input.MouseEvent
-import scalafx.scene.control.Label
+import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.Pane
 import scalafx.stage.{Modality, Stage}
 import scalafx.animation.{AnimationTimer, KeyFrame, Timeline}
 import scalafx.util.Duration
 import scalafxml.core.macros.sfxml
 import scalafx.Includes._
+
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.duration.DurationDouble
 import scalafx.scene.{Parent, Scene}
 import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 import javafx.{scene => jfxs}
-
-import com.example.model.{EnemyModel, LaserModel}
+import com.example.model.{EnemyModel, LaserModel, LeaderboardEntry}
+import com.example.util.LeaderboardUtil
+import scalafx.event.ActionEvent
 
 @sfxml
 class GameController(private val gamePane: Pane,
                      private val spaceshipImageView: ImageView,
                      private val countdownLabel: Label,
                      private val scoreLabel: Label,
-                     private val difficultyLabel: Label) {
+                     private val difficultyLabel: Label,
+                     private val pauseBtn: Button ) {
 
   // labels
   private var score = 0
@@ -44,10 +47,14 @@ class GameController(private val gamePane: Pane,
 
   var stage: Stage = _
   val selectedSpaceship = new StringProperty(this, "selectedSpaceship", "")
+  // user data
+  var username: String = _
+  var difficulty: String = _
 
   def initialize(): Unit = {
     selectedSpaceship.onChange((_, _, newValue) => updateSpaceshipImage(newValue))
     gamePane.onMouseMoved = handleSpaceshipMovement _
+    pauseBtn.onAction = showPauseMenu _
   }
 
   def setDifficulty(difficulty: String): Unit = {
@@ -187,6 +194,11 @@ class GameController(private val gamePane: Pane,
     gameRunning = false
     println(s"Game over! Your score: $score")
     countdownLabel.text = s"Game over! Your score: $score"
+    // Save the score to leaderboard
+    val leaderboard = LeaderboardUtil.loadLeaderboard("leaderboard.txt")
+    val entry = LeaderboardEntry(username, difficulty, score)
+    leaderboard.addEntry(entry)
+    LeaderboardUtil.saveLeaderboard(leaderboard, "leaderboard.txt")
   }
 
   def pauseGame(): Unit = {
@@ -222,7 +234,7 @@ class GameController(private val gamePane: Pane,
     stage.scene = new Scene(root.asInstanceOf[scalafx.scene.Parent])
   }
 
-  def showPauseMenu(): Unit = {
+  def showPauseMenu(event: ActionEvent): Unit = {
     pauseGame()
 
     val resource = getClass.getResource("/com/example/view/GamePauseLayout.fxml")
