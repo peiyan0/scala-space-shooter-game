@@ -21,7 +21,7 @@
                 <Label fx:id="difficultyLabel" layoutX="500.0" layoutY="250.0" style="-fx-font-size: 32px;" />
                 <ImageView fx:id="spaceshipImageView" fitWidth="150.0" layoutX="625" layoutY="500" preserveRatio="true" />
                 <ImageView fx:id="enemyImageView" layoutX="440" layoutY="100" visible="false" />
-                <Button layoutX="1166.0" layoutY="626.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="pause-btn" stylesheets="@../../../style/Main.css">
+                <Button fx:id="pauseBtn" layoutX="1166.0" layoutY="626.0" mnemonicParsing="false" onAction="#showPauseMenu" prefHeight="40.0" prefWidth="40.0" styleClass="pause-btn" stylesheets="@../../../style/Main.css">
                <graphic>
                   <ImageView fitHeight="150.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>

@@ -5,13 +5,16 @@ import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.control.Label
 import scalafx.scene.layout.Pane
-import scalafx.stage.Stage
+import scalafx.stage.{Modality, Stage}
 import scalafx.animation.{AnimationTimer, KeyFrame, Timeline}
 import scalafx.util.Duration
 import scalafxml.core.macros.sfxml
 import scalafx.Includes._
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.duration.DurationDouble
+import scalafx.scene.{Parent, Scene}
+import scalafxml.core.{FXMLLoader, NoDependencyResolver}
+import javafx.{scene => jfxs}
 
 import com.example.model.{EnemyModel, LaserModel}
 
@@ -19,25 +22,32 @@ import com.example.model.{EnemyModel, LaserModel}
 class GameController(private val gamePane: Pane,
                      private val spaceshipImageView: ImageView,
                      private val countdownLabel: Label,
-                     private val scoreLabel: Label) {
+                     private val scoreLabel: Label,
+                     private val difficultyLabel: Label) {
 
+  // labels
   private var score = 0
   private var gameRunning = false
+  private var animationTimer: AnimationTimer = _
+  private var gameTimeline: Timeline = _
+  private var countdownTimer: AnimationTimer = _
+  // objects
   private var lasers: ListBuffer[LaserModel] = ListBuffer()
   private var enemies: ListBuffer[EnemyModel] = ListBuffer()
+  // objects interval
   private var laserInterval = 0.25.second
   private var enemySpawnInterval = 0.1.second
   private var lastLaserTime = 0L
   private var lastEnemySpawnTime = 0L
   private var remainingTime = 30
   private var lastUpdateTime = 0L
+
   var stage: Stage = _
   val selectedSpaceship = new StringProperty(this, "selectedSpaceship", "")
 
   def initialize(): Unit = {
     selectedSpaceship.onChange((_, _, newValue) => updateSpaceshipImage(newValue))
     gamePane.onMouseMoved = handleSpaceshipMovement _
-    startGame()
   }
 
   def setDifficulty(difficulty: String): Unit = {
@@ -52,6 +62,23 @@ class GameController(private val gamePane: Pane,
         laserInterval = 0.25.second
         enemySpawnInterval = 0.1.second
     }
+    difficultyLabel.text = s"Difficulty: $difficulty"
+    showDifficultyLabel()
+  }
+
+  private def showDifficultyLabel(): Unit = {
+    difficultyLabel.visible = true
+    val showDuration = Duration(2000)
+
+    val showTimeline = new Timeline {
+      keyFrames = Seq(
+        KeyFrame(showDuration, onFinished = _ => {
+          difficultyLabel.visible = false
+          startGame()
+        })
+      )
+    }
+    showTimeline.play()
   }
 
   private def updateSpaceshipImage(spaceship: String): Unit = {
@@ -61,49 +88,6 @@ class GameController(private val gamePane: Pane,
 
   private def handleSpaceshipMovement(event: MouseEvent): Unit = {
     spaceshipImageView.layoutX = event.sceneX - spaceshipImageView.boundsInParent.value.getWidth / 2
-  }
-
-  private def startGame(): Unit = {
-    gameRunning = true
-    countdownLabel.text = s"Time: $remainingTime s"
-    val gameDuration = Duration(30000)
-
-    val gameTimeline = new Timeline {
-      keyFrames = Seq(
-        KeyFrame(gameDuration, onFinished = _ => endGame())
-      )
-    }
-
-    val animationTimer = AnimationTimer { now =>
-      if (gameRunning) {
-        if (now - lastLaserTime > laserInterval.toNanos) {
-          fireLaser()
-          lastLaserTime = now
-        }
-        if (now - lastEnemySpawnTime > enemySpawnInterval.toNanos) {
-          spawnEnemy()
-          lastEnemySpawnTime = now
-        }
-        updateLasers()
-        updateEnemies()
-        checkCollisions()
-      }
-    }
-
-    gameTimeline.play()
-    animationTimer.start()
-
-    val countdownTimer = AnimationTimer { now =>
-      if (gameRunning && now - lastUpdateTime > 1.second.toNanos) {
-        remainingTime -= 1
-        countdownLabel.text = s"Time: $remainingTime s"
-        lastUpdateTime = now
-        if (remainingTime <= 0) {
-          endGame()
-        }
-      }
-    }
-    countdownTimer.start()
   }
 
   private def fireLaser(): Unit = {
@@ -156,10 +140,113 @@ class GameController(private val gamePane: Pane,
     }
   }
 
+  private def startGame(): Unit = {
+    gameRunning = true
+    countdownLabel.text = s"Time: $remainingTime s"
+    val gameDuration = Duration(30000)
+
+    gameTimeline = new Timeline {
+      keyFrames = Seq(
+        KeyFrame(gameDuration, onFinished = _ => endGame())
+      )
+    }
+    gameTimeline.play()
+
+
+    animationTimer = AnimationTimer { now =>
+      if (gameRunning) {
+        if (now - lastLaserTime > laserInterval.toNanos) {
+          fireLaser()
+          lastLaserTime = now
+        }
+        if (now - lastEnemySpawnTime > enemySpawnInterval.toNanos) {
+          spawnEnemy()
+          lastEnemySpawnTime = now
+        }
+        updateLasers()
+        updateEnemies()
+        checkCollisions()
+      }
+    }
+    animationTimer.start()
+
+    countdownTimer = AnimationTimer { now =>
+      if (gameRunning && now - lastUpdateTime > 1.second.toNanos) {
+        remainingTime -= 1
+        countdownLabel.text = s"Time: $remainingTime s"
+        lastUpdateTime = now
+        if (remainingTime <= 0) {
+          endGame()
+        }
+      }
+    }
+    countdownTimer.start()
+  }
+
   private def endGame(): Unit = {
     gameRunning = false
     println(s"Game over! Your score: $score")
     countdownLabel.text = s"Game over! Your score: $score"
+  }
+
+  def pauseGame(): Unit = {
+    gameRunning = false
+    if (animationTimer != null) animationTimer.stop()
+    if (gameTimeline != null) gameTimeline.pause()
+    if (countdownTimer != null) countdownTimer.stop()
+  }
+
+  def resumeGame(): Unit = {
+    gameRunning = true
+    if (animationTimer != null) animationTimer.start()
+    if (gameTimeline != null) gameTimeline.play()
+    if (countdownTimer != null) countdownTimer.start()
+  }
+
+  def restartGame(): Unit = {
+    gameRunning = false
+    score = 0
+    remainingTime = 30
+    lasers.clear()
+    enemies.clear()
+    gamePane.children.clear()
+    gamePane.children.addAll(countdownLabel, scoreLabel, difficultyLabel, spaceshipImageView)
+    initialize()
+  }
+
+  def exitGame(): Unit = {
+    val resource = getClass.getResource("/com/example/view/MainMenuLayout.fxml")
+    val loader = new FXMLLoader(resource, NoDependencyResolver)
+    loader.load()
+    val root = loader.getRoot[jfxs.Parent]
+    stage.scene = new Scene(root.asInstanceOf[scalafx.scene.Parent])
+  }
+
+  def showPauseMenu(): Unit = {
+    pauseGame()
+
+    val resource = getClass.getResource("/com/example/view/GamePauseLayout.fxml")
+    val loader = new FXMLLoader(resource, NoDependencyResolver)
+    loader.load()
+    val root: Parent = loader.getRoot[jfxs.Parent]
+
+    val pauseStage = new Stage() {
+      scene = new Scene(root)
+      title = "Game Paused"
+      initOwner(stage)
+      initModality(Modality.ApplicationModal)
+    }
+
+    // do not explicitly call controller.gameController = this
+    // use GamePauseController#Controller instead
+    val controller = loader.getController[GamePauseController#Controller]
+    controller.stage = pauseStage
+
+    pauseStage.showAndWait()
+
+    if (gameRunning) {
+      resumeGame()
+    }
   }
 
   initialize()
