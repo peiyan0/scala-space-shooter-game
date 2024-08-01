@@ -14,9 +14,9 @@
                 <Image url="@../../../images/background/bg4.jpg" />
             </image>
         </ImageView>
-        <VBox alignment="TOP_CENTER" layoutX="87.0" layoutY="94.0" prefHeight="197.0" prefWidth="417.0" styleClass="v-box" stylesheets="@/style/Main.css">
+        <VBox fx:id="leaderboardVBox" alignment="TOP_CENTER" layoutX="87.0" layoutY="94.0" prefHeight="197.0" prefWidth="417.0" styleClass="v-box" stylesheets="@/style/Main.css" >
             <children>
-                <Label alignment="CENTER" contentDisplay="CENTER" text="LEADERBOARD" />
+<!--                Add entries and header here-->
             </children>
         </VBox>
         <Button fx:id="backToStart" alignment="CENTER" contentDisplay="CENTER" layoutX="242.0" layoutY="325.0" mnemonicParsing="false" onAction="#backToGame" styleClass="instruction-button" stylesheets="@/style/Main.css" text="Back to Start" textAlignment="CENTER" />
