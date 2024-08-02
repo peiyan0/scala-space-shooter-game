@@ -21,14 +21,60 @@
                 <Label fx:id="difficultyLabel" layoutX="500.0" layoutY="250.0" style="-fx-font-size: 32px;" />
                 <ImageView fx:id="spaceshipImageView" fitWidth="150.0" layoutX="625" layoutY="500" preserveRatio="true" />
                 <ImageView fx:id="enemyImageView" layoutX="440" layoutY="100" visible="false" />
-                <Button fx:id="pauseBtn" layoutX="1166.0" layoutY="626.0" mnemonicParsing="false" onAction="#showPauseMenu" prefHeight="40.0" prefWidth="40.0" styleClass="pause-btn" stylesheets="@../../../style/Main.css">
+            <Button fx:id="pauseBtn" layoutX="1083.0" layoutY="636.0" mnemonicParsing="false" onAction="#handlePauseAction" stylesheets="@../../../style/Main.css">
                <graphic>
-                  <ImageView fitHeight="150.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="pauseIcon" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../images/icons/pause.png" />
                      </image>
                   </ImageView>
-               </graphic></Button>
+               </graphic>
+            </Button>
+            <Button fx:id="resumeBtn" layoutX="1083.0" layoutY="636.0" mnemonicParsing="false" onAction="#handleResumeAction" stylesheets="@../../../style/Main.css" visible="false">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/icons/resume.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="restartBtn" layoutX="1139.0" layoutY="636.0" mnemonicParsing="false" onAction="#handleRestartAction" stylesheets="@../../../style/Main.css">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/icons/restart.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="exitBtn" layoutX="1195.0" layoutY="636.0" mnemonicParsing="false" onAction="#handleExitAction" stylesheets="@../../../style/Main.css">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/icons/exit.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="muteBtn" layoutX="1027.0" layoutY="636.0" mnemonicParsing="false" onAction="#handleUnmuteAction" stylesheets="@../../../style/Main.css" visible="false">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/icons/mute.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="unmuteBtn" layoutX="1027.0" layoutY="636.0" mnemonicParsing="false" onAction="#handleMuteAction" stylesheets="@../../../style/Main.css">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../images/icons/unmute.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
             </children>
         </Pane>
     </children>
