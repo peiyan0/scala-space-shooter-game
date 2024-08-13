@@ -197,11 +197,28 @@ class GameController(private val gamePane: Pane,
   }
 
   // end game logic
-  private def endGame(): Unit = {
+  def endGame(): Unit = {
     gameRunning = false
     println(s"Game over! Your score: $score")
-    StatusUtil.showMessage(statusLabel, s"Finished! Your score: $score")
+    StatusUtil.showMessage(statusLabel, s"Finished! Your score: $score", fade = false)
     addScoreToLeaderboard()
+
+    val waitTimeline = new Timeline {
+      keyFrames = Seq(
+        KeyFrame(Duration(3000), onFinished = _ => {
+          val resource = getClass.getResource("/com/example/view/GameEndLayout.fxml")
+          val loader = new FXMLLoader(resource, NoDependencyResolver)
+          loader.load()
+          val root = loader.getRoot[jfxs.layout.AnchorPane]
+
+          stage.scene = new Scene(new AnchorPane(root))
+
+          val gameEndController = loader.getController[GameEndController#Controller]()
+          gameEndController.stage = stage
+        })
+      )
+    }
+    waitTimeline.play()
   }
 
   // hide status label and start game

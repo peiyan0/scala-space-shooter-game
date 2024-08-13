@@ -185,3 +185,20 @@
     -fx-text-fill: linear-gradient(to right, #ff7e5f, #feb47b);
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0.5, 0.0, 0.0);
 }
+
+.game-end-text {
+    -fx-font-size: 32px;
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
+    -fx-text-alignment: center;
+    -fx-layout-x: 50;
+}
+
+.result-grid-pane {
+    -fx-background-color: #333;
+    -fx-background-radius: 15px;
+    -fx-padding: 20px;
+    -fx-border-color: #555;
+    -fx-border-width: 5px;
+    -fx-vertical-grid-lines-visible: true;
+}
