@@ -16,9 +16,9 @@ import scalafx.Includes._
 import scalafxml.core.macros.sfxml
 import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 import javafx.{scene => jfxs}
-
 import com.example.model.{EnemyModel, LaserModel, LeaderboardEntry}
 import com.example.util.{AudioUtil, LeaderboardUtil, StatusUtil}
+import scalafx.scene.media.AudioClip
 
 @sfxml
 class GameController(private val gamePane: Pane,
@@ -34,6 +34,9 @@ class GameController(private val gamePane: Pane,
                      private val unmuteBtn: Button
                     ) {
 
+  // implement game end numbers
+// implement enemies hit effect
+
   // Labels and game state
   private var score = 0
   private var gameRunning = false
@@ -44,6 +47,14 @@ class GameController(private val gamePane: Pane,
   // Game objects
   private var lasers: ListBuffer[LaserModel] = ListBuffer()
   private var enemies: ListBuffer[EnemyModel] = ListBuffer()
+  // Objects sounds
+  private val laserSound = new AudioClip(getClass.getResource("/sounds/laser.mp3").toString) {
+    volume = 0.5
+  }
+  private val explosionSound = new AudioClip(getClass.getResource("/sounds/explosion.mp3").toString) {
+    volume = 0.3
+  }
+
 
   // Object intervals
   private var laserInterval = 0.25.second
@@ -103,6 +114,7 @@ class GameController(private val gamePane: Pane,
     laser1.initialize(20, 60, spaceshipImageView.layoutX.value + 10, spaceshipImageView.layoutY.value)
     laser2.initialize(20, 60, spaceshipImageView.layoutX.value + spaceshipImageView.boundsInParent.value.getWidth - 15, spaceshipImageView.layoutY.value)
 
+    laserSound.play()
     lasers += laser1
     lasers += laser2
     gamePane.children.addAll(laser1.imageView, laser2.imageView)
@@ -142,6 +154,12 @@ class GameController(private val gamePane: Pane,
         if (laser.imageView.boundsInParent.value.intersects(enemy.imageView.boundsInParent.value)) {
           score += 10
           scoreLabel.text = s"Score: $score"
+
+          explosionSound.play()
+          val explosionX = enemy.imageView.layoutX.value
+          val explosionY = enemy.imageView.layoutY.value
+
+          showExplosionEffect(explosionX, explosionY)
           lasers -= laser
           enemies -= enemy
           gamePane.children.removeAll(laser.imageView, enemy.imageView)
@@ -149,6 +167,32 @@ class GameController(private val gamePane: Pane,
       }
     }
   }
+
+  // show explosion visual effect at the given position
+  private def showExplosionEffect(x: Double, y: Double): Unit = {
+    // Create explosion image view
+    val explosionImage = new ImageView(new Image(getClass.getResource("/images/effect/explosion.png").toString)) {
+      layoutX = x.value
+      layoutY = y.value
+      scaleX = 0.15
+      scaleY = 0.15
+    }
+
+    // Add explosion image to game pane
+    gamePane.children.add(explosionImage)
+
+    // Timeline to remove the explosion effect after 500ms
+    val removeEffectTimeline = new Timeline {
+      keyFrames = Seq(
+        KeyFrame(Duration(500), onFinished = _ => {
+          gamePane.children.remove(explosionImage)
+        })
+      )
+    }
+
+    removeEffectTimeline.play()
+  }
+
 
 
 
