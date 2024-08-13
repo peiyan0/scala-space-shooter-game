@@ -55,7 +55,6 @@
 }
 
 .instruction-button {
-    /*-fx-text-fill: #eedb00;*/
     -fx-background-color: transparent;
 }
 .instruction-button:hover {
@@ -66,7 +65,6 @@
     -fx-min-width: 400;
     -fx-font-size: 14px;
     -fx-background-color: transparent;
-    /*-fx-text-fill: #eedb00;*/
     -fx-text-alignment: center;
     -fx-alignment: center-left;
     -fx-content-display: center;
@@ -80,7 +78,6 @@
 }
 
 .user-input-label {
-    /*-fx-text-fill: #eedb00;*/
     -fx-text-alignment: center;
     -fx-font-size: 20px;
 }
@@ -179,32 +176,12 @@
     -fx-text-fill: #eedb00;
 }
 
-/*.pause-window-btn {*/
-/*    -fx-min-height: 60px;*/
-/*    -fx-min-width: 180px;*/
-/*    -fx-font-size: 14px;*/
-/*    -fx-background-radius: 15px;*/
-/*    -fx-text-alignment: center;*/
-/*    -fx-background-color: #202020;*/
-/*    -fx-transition: all 0.3s ease;*/
-/*    -fx-text-fill: #fff;*/
-/*}*/
-/*.pause-panel {*/
-/*    -fx-background-color: #333;*/
-/*    -fx-background-radius: 25px;*/
-/*}*/
-/*.pause-label {*/
-/*    -fx-font-size: 32px;*/
-/*    -fx-text-fill: #fff;*/
-/*    -fx-background-color: #555;*/
-/*    -fx-label-padding: 10px 180px;*/
-/*    -fx-background-radius: 10px;*/
-/*}*/
-
-/*.pause-btn {*/
-/*    -fx-background-color: transparent;*/
-/*}*/
-
 .game-h-box {
     -fx-alignment: center;
+}
+
+.status-label {
+    -fx-font-size: 32px;
+    -fx-text-fill: linear-gradient(to right, #ff7e5f, #feb47b);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0.5, 0.0, 0.0);
 }

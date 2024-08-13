@@ -1,37 +1,37 @@
 package com.example.controller
 
+import scala.collection.mutable.ListBuffer
+import scala.concurrent.duration.DurationDouble
+import scalafx.animation.{AnimationTimer, KeyFrame, Timeline}
 import scalafx.beans.property.StringProperty
+import scalafx.event.ActionEvent
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.{AnchorPane, Pane}
+import scalafx.scene.Scene
 import scalafx.stage.{Modality, Stage}
-import scalafx.animation.{AnimationTimer, KeyFrame, Timeline}
 import scalafx.util.Duration
-import scalafxml.core.macros.sfxml
 import scalafx.Includes._
-
-import scala.collection.mutable.ListBuffer
-import scala.concurrent.duration.DurationDouble
-import scalafx.scene.{Parent, Scene}
+import scalafxml.core.macros.sfxml
 import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 import javafx.{scene => jfxs}
+
 import com.example.model.{EnemyModel, LaserModel, LeaderboardEntry}
-import com.example.util.{AudioUtil, LeaderboardUtil}
-import scalafx.event.ActionEvent
+import com.example.util.{AudioUtil, LeaderboardUtil, StatusUtil}
 
 @sfxml
 class GameController(private val gamePane: Pane,
                      private val spaceshipImageView: ImageView,
                      private val countdownLabel: Label,
                      private val scoreLabel: Label,
-                     private val difficultyLabel: Label,
+                     private val statusLabel: Label,
+                     private val exitBtn: Button,
                      private val pauseBtn: Button,
+                     private val muteBtn: Button,
                      private val resumeBtn: Button,
                      private val restartBtn: Button,
-                     private val exitBtn: Button,
-                     private val unmuteBtn: Button,
-                     private val muteBtn: Button
+                     private val unmuteBtn: Button
                     ) {
 
   // Labels and game state
@@ -61,13 +61,12 @@ class GameController(private val gamePane: Pane,
   var difficulty: String = _
 
   def initialize(): Unit = {
-    // Initialize state and UI components
     selectedSpaceship.onChange((_, _, newValue) => updateSpaceshipImage(newValue))
     gamePane.onMouseMoved = handleSpaceshipMovement _
   }
 
+  // adjust intervals based on difficulty
   def setDifficulty(difficulty: String): Unit = {
-    // Adjust intervals based on difficulty
     difficulty match {
       case "EASY" =>
         laserInterval = 0.5.second
@@ -79,39 +78,25 @@ class GameController(private val gamePane: Pane,
         laserInterval = 0.25.second
         enemySpawnInterval = 0.1.second
     }
-    difficultyLabel.text = s"Difficulty: $difficulty"
-    showDifficultyLabel()
+    StatusUtil.showMessage(statusLabel, s"Difficulty: $difficulty")
+    hideLabelAndStartGame()
   }
 
-  private def showDifficultyLabel(): Unit = {
-    // Show difficulty label for a duration
-    difficultyLabel.visible = true
-    val showDuration = Duration(2000)
 
-    val showTimeline = new Timeline {
-      keyFrames = Seq(
-        KeyFrame(showDuration, onFinished = _ => {
-          difficultyLabel.visible = false
-          startGame()
-        })
-      )
-    }
-    showTimeline.play()
-  }
-
+  // ----------GAME LOGIC----------
+  // update spaceship image
   private def updateSpaceshipImage(spaceship: String): Unit = {
-    // Update spaceship image
     val image = new Image(getClass.getResourceAsStream(spaceship))
     spaceshipImageView.image = image
   }
 
+  // handle spaceship movement
   private def handleSpaceshipMovement(event: MouseEvent): Unit = {
-    // Handle spaceship movement
     spaceshipImageView.layoutX = event.sceneX - spaceshipImageView.boundsInParent.value.getWidth / 2
   }
 
+  // create and initialize lasers
   private def fireLaser(): Unit = {
-    // Create and initialize lasers
     val laser1 = new LaserModel("/images/effect/laser.png")
     val laser2 = new LaserModel("/images/effect/laser.png")
 
@@ -123,8 +108,8 @@ class GameController(private val gamePane: Pane,
     gamePane.children.addAll(laser1.imageView, laser2.imageView)
   }
 
+  // create and initialize enemy
   private def spawnEnemy(): Unit = {
-    // Create and initialize enemy
     val enemy = new EnemyModel("/images/enemy/enemy.png")
     val maxX = gamePane.width.value - 100
     val randomX = math.random() * maxX
@@ -134,15 +119,15 @@ class GameController(private val gamePane: Pane,
     gamePane.children.add(enemy.imageView)
   }
 
+  // update laser positions and remove off-screen lasers
   private def updateLasers(): Unit = {
-    // Update laser positions and remove off-screen lasers
     lasers.foreach(_.move())
     lasers = lasers.filter(_.imageView.layoutY.value > 0)
     gamePane.children.removeIf(laser => laser.layoutY.value <= 0)
   }
 
+  // update enemy positions and remove off-screen enemies
   private def updateEnemies(): Unit = {
-    // Update enemy positions and remove off-screen enemies
     enemies.foreach(_.move())
     enemies = enemies.filter(_.imageView.layoutY.value < gamePane.height.value)
     gamePane.children.removeIf(node =>
@@ -150,8 +135,8 @@ class GameController(private val gamePane: Pane,
     )
   }
 
+  // check for collisions between lasers and enemies
   private def checkCollisions(): Unit = {
-    // Check for collisions between lasers and enemies
     lasers.foreach { laser =>
       enemies.foreach { enemy =>
         if (laser.imageView.boundsInParent.value.intersects(enemy.imageView.boundsInParent.value)) {
@@ -165,8 +150,11 @@ class GameController(private val gamePane: Pane,
     }
   }
 
+
+
+  // ----------GENERAL LOGIC----------
+  // start game logic
   private def startGame(): Unit = {
-    // Start game logic
     gameRunning = true
     countdownLabel.text = s"Time: $remainingTime s"
     val gameDuration = Duration(30000)
@@ -208,83 +196,87 @@ class GameController(private val gamePane: Pane,
     countdownTimer.start()
   }
 
+  // end game logic
   private def endGame(): Unit = {
-    // End game logic
     gameRunning = false
     println(s"Game over! Your score: $score")
-    countdownLabel.text = s"Game over! Your score: $score"
+    StatusUtil.showMessage(statusLabel, s"Finished! Your score: $score")
     addScoreToLeaderboard()
   }
 
-  def addScoreToLeaderboard(): Unit = {
-    // Add score to leaderboard
-    val leaderboard = LeaderboardUtil.loadLeaderboard("leaderboard.txt")
-    val entry = LeaderboardEntry(username, difficulty, score)
-    leaderboard.addEntry(entry)
-    LeaderboardUtil.saveLeaderboard(leaderboard, "leaderboard.txt")
+  // hide status label and start game
+  def hideLabelAndStartGame(): Unit = {
+    val showTimeline = new Timeline {
+      keyFrames = Seq(
+        KeyFrame(Duration(4000), onFinished = _ => {
+          statusLabel.visible = false
+          startGame()
+        })
+      )
+    }
+    showTimeline.play()
   }
 
-  def pauseGame(): Unit = {
-    // Pause game logic
+  // handle pause action
+  def handlePauseAction(event: ActionEvent): Unit = {
     gameRunning = false
     if (animationTimer != null) animationTimer.stop()
     if (gameTimeline != null) gameTimeline.pause()
     if (countdownTimer != null) countdownTimer.stop()
+    pauseBtn.visible = false
+    resumeBtn.visible = true
+    StatusUtil.showMessage(statusLabel, "Paused", fade = false)
   }
 
-  // Handle resume action
+  // resume game logic
   def handleResumeAction(event: ActionEvent): Unit = {
-    pauseBtn.setVisible(true)
-    resumeBtn.setVisible(false)
+    pauseBtn.visible = true
+    resumeBtn.visible = false
+    statusLabel.visible = false
     gameRunning = true
     if (animationTimer != null) animationTimer.start()
     if (gameTimeline != null) gameTimeline.play()
     if (countdownTimer != null) countdownTimer.start()
   }
 
-  // Handle restart action
+  // reset game state and components
   def handleRestartAction(event: ActionEvent): Unit = {
-    // Reset game state and components
     gameRunning = false
     score = 0
     remainingTime = 30
+    reset()
+    initialize()
+  }
+
+  def reset(): Unit = {
     lasers.clear()
     enemies.clear()
     gamePane.children.clear()
     gamePane.children.addAll(countdownLabel, scoreLabel,
-      difficultyLabel, spaceshipImageView, pauseBtn,
+      statusLabel, spaceshipImageView, pauseBtn,
       resumeBtn, restartBtn, exitBtn, muteBtn, unmuteBtn)
-    pauseBtn.setVisible(false)
-    resumeBtn.setVisible(true)
+    pauseBtn.visible = false
+    resumeBtn.visible = true
 
-    // Reset timers and state
+    // reset timers and state
     if (animationTimer != null) animationTimer.stop()
     if (gameTimeline != null) gameTimeline.stop()
     if (countdownTimer != null) countdownTimer.stop()
     lastLaserTime = 0L
     lastEnemySpawnTime = 0L
     lastUpdateTime = 0L
-
-    initialize() // Reinitialize game state
   }
 
-  // Handle exit action
+  // handle exit action
   def handleExitAction(event: ActionEvent): Unit = {
     val resource = getClass.getResource("/com/example/view/MainMenuLayout.fxml")
     val loader = new FXMLLoader(resource, NoDependencyResolver)
     loader.load()
-    val root = loader.getRoot[jfxs.layout.AnchorPane] // Ensure the root is cast to the JavaFX AnchorPane
-    stage.scene = new Scene(new AnchorPane(root)) // Wrap the JavaFX AnchorPane in a ScalaFX AnchorPane
+    val root = loader.getRoot[jfxs.layout.AnchorPane]
+    stage.scene = new Scene(new AnchorPane(root))
 
     val mainMenuController = loader.getController[MainMenuController#Controller]()
     mainMenuController.stage = stage
-  }
-
-  // Handle pause action
-  def handlePauseAction(event: ActionEvent): Unit = {
-    pauseBtn.setVisible(false)
-    resumeBtn.setVisible(true)
-    pauseGame()
   }
 
   def handleMuteAction(event: ActionEvent): Unit = {
@@ -293,6 +285,14 @@ class GameController(private val gamePane: Pane,
 
   def handleUnmuteAction(event: ActionEvent): Unit = {
     AudioUtil.handleUnmuteAction(muteBtn, unmuteBtn)
+  }
+
+  // add score to leaderboard
+  def addScoreToLeaderboard(): Unit = {
+    val leaderboard = LeaderboardUtil.loadLeaderboard("leaderboard.txt")
+    val entry = LeaderboardEntry(username, difficulty, score)
+    leaderboard.addEntry(entry)
+    LeaderboardUtil.saveLeaderboard(leaderboard, "leaderboard.txt")
   }
 
   initialize()
