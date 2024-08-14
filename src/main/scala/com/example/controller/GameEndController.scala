@@ -20,14 +20,18 @@ class GameEndController(private var difficultyLabel: Label,
                         private var usernameLabel: Label
                        ) {
   var stage: Stage = _
+  var difficulty: String = _
+  var username: String = _
 
   def setResults(username: String, totalScore: Int, enemiesHit: Int, enemiesMissed: Int, difficultyLevel: String): Unit = {
     usernameLabel.text = username
+    this.username = username
     totalScoreLabel.text = totalScore.toString
     totalScoreLabel1.text = totalScore.toString
     enemiesHitLabel.text = enemiesHit.toString
     enemiesMissedLabel.text = enemiesMissed.toString
     difficultyLabel.text = difficultyLevel
+    difficulty = difficultyLevel
   }
 
   // show the leaderboard screen
@@ -50,26 +54,35 @@ class GameEndController(private var difficultyLabel: Label,
     leaderboardStage.show()
   }
 
-  // restart the game by showing the user input screen
-  def playAgain(event: ActionEvent): Unit = {
-    val resource = getClass.getResource("/com/example/view/UserInputLayout.fxml")
+  // play next level
+  def playNextLevel(event: ActionEvent): Unit = {
+    val nextDifficulty = difficulty match {
+      case "EASY" => "MEDIUM"
+      case "MEDIUM" => "HARD"
+      case "HARD" => "HARD"
+      case _ => "EASY" // Default to EASY if current difficulty is unknown
+    }
+
+    val resource = getClass.getResource("/com/example/view/SpaceshipSelectionLayout.fxml")
     val loader = new FXMLLoader(resource, NoDependencyResolver)
     loader.load()
     val root: Parent = loader.getRoot[jfxs.layout.AnchorPane]
 
-    val dialogStage = new Stage() {
-      title = "Spaceship Game"
+    val spaceshipSelectionStage = new Stage() {
+      title = "Spaceship Selection"
       icons += new Image(getClass.getResourceAsStream("/images/spaceship/ship1.png"))
       initModality(Modality.ApplicationModal)
       initOwner(stage)
       scene = new Scene(root)
     }
 
-    val controller = loader.getController[UserInputController#Controller]()
-    controller.stage = stage
-    controller.dialogStage = dialogStage
-    dialogStage.showAndWait()
+    val controller = loader.getController[SpaceshipSelectionController#Controller]()
+    controller.stage = spaceshipSelectionStage
+    controller.setDifficulty(nextDifficulty)
+    controller.setUsername(username)
+    spaceshipSelectionStage.showAndWait()
   }
+
 
   // return to the main menu
   def quitToMainMenu(event: ActionEvent): Unit = {

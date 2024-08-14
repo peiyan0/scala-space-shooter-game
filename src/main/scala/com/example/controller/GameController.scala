@@ -325,11 +325,11 @@ class GameController(private val gamePane: Pane,
     val gameEndController = loader.getController[GameEndController#Controller]()
     gameEndController.stage = stage
     gameEndController.setResults(
-    username = this.username,
+    username = username,
     totalScore = score,
     enemiesHit = enemiesHit,
     enemiesMissed = enemiesMissed,
-    difficultyLevel = this.difficulty
+    difficultyLevel = difficulty
     )
   }
 
