@@ -202,3 +202,7 @@
     -fx-border-width: 5px;
     -fx-vertical-grid-lines-visible: true;
 }
+
+.game-end-vbox {
+    -fx-font-size: 18px;
+}

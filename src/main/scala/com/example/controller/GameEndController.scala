@@ -7,14 +7,30 @@ import scalafx.scene.Scene
 import javafx.{scene => jfxs}
 import scalafx.event.ActionEvent
 import scalafxml.core.macros.sfxml
-import javafx.scene.{Parent, image => jfxi, layout => jfxl}
+import javafx.scene.Parent
+import scalafx.scene.control.Label
 import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 
 @sfxml
-class GameEndController {
+class GameEndController(private var difficultyLabel: Label,
+                        private var enemiesHitLabel: Label,
+                        private var enemiesMissedLabel: Label,
+                        private var totalScoreLabel: Label,
+                        private var totalScoreLabel1: Label,
+                        private var usernameLabel: Label
+                       ) {
   var stage: Stage = _
 
-  // Show the leaderboard screen
+  def setResults(username: String, totalScore: Int, enemiesHit: Int, enemiesMissed: Int, difficultyLevel: String): Unit = {
+    usernameLabel.text = username
+    totalScoreLabel.text = totalScore.toString
+    totalScoreLabel1.text = totalScore.toString
+    enemiesHitLabel.text = enemiesHit.toString
+    enemiesMissedLabel.text = enemiesMissed.toString
+    difficultyLabel.text = difficultyLevel
+  }
+
+  // show the leaderboard screen
   def showLeaderboard(event: ActionEvent): Unit = {
     val resource = getClass.getResource("/com/example/view/LeaderboardLayout.fxml")
     val loader = new FXMLLoader(resource, NoDependencyResolver)
@@ -34,7 +50,7 @@ class GameEndController {
     leaderboardStage.show()
   }
 
-  // Restart the game by showing the user input screen
+  // restart the game by showing the user input screen
   def playAgain(event: ActionEvent): Unit = {
     val resource = getClass.getResource("/com/example/view/UserInputLayout.fxml")
     val loader = new FXMLLoader(resource, NoDependencyResolver)
@@ -55,7 +71,7 @@ class GameEndController {
     dialogStage.showAndWait()
   }
 
-  // Return to the main menu
+  // return to the main menu
   def quitToMainMenu(event: ActionEvent): Unit = {
     val resource = getClass.getResource("/com/example/view/MainMenuLayout.fxml")
     val loader = new FXMLLoader(resource, NoDependencyResolver)

@@ -15,6 +15,7 @@ class SpaceshipSelectionController(private val spaceshipImageView: ImageView) {
   var stage: Stage = _
   val selectedSpaceship = new StringProperty(this, "selectedSpaceship", "")
   private var difficulty: String = _
+  private var username: String = _
 
   private val spaceshipImages = List(
     "/images/spaceship/ship1.png",
@@ -29,6 +30,9 @@ class SpaceshipSelectionController(private val spaceshipImageView: ImageView) {
 
   def setDifficulty(difficulty: String): Unit = {
     this.difficulty = difficulty
+  }
+  def setUsername(username: String): Unit = {
+    this.username = username
   }
 
   def handleLeftAction(event: ActionEvent): Unit = {
@@ -66,6 +70,7 @@ class SpaceshipSelectionController(private val spaceshipImageView: ImageView) {
     controller.stage = stage
     controller.selectedSpaceship.bind(selectedSpaceship)
     controller.setDifficulty(difficulty)
+    controller.setUsername(username)
   }
 
   def handleSpaceshipSelection(spaceship: String): Unit = {

@@ -9,6 +9,7 @@ import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.{AnchorPane, Pane}
+import scalafx.scene.media.AudioClip
 import scalafx.scene.Scene
 import scalafx.stage.Stage
 import scalafx.util.Duration
@@ -18,7 +19,6 @@ import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 import javafx.{scene => jfxs}
 import com.example.model.{EnemyModel, LaserModel, LeaderboardEntry}
 import com.example.util.{AudioUtil, LeaderboardUtil, StatusUtil}
-import scalafx.scene.media.AudioClip
 
 @sfxml
 class GameController(private val gamePane: Pane,
@@ -49,14 +49,13 @@ class GameController(private val gamePane: Pane,
   // Game objects
   private var lasers: ListBuffer[LaserModel] = ListBuffer()
   private var enemies: ListBuffer[EnemyModel] = ListBuffer()
+  var totalSpawned: Int = 0
   // Objects sounds
   private val laserSound = new AudioClip(getClass.getResource("/sounds/laser.mp3").toString) {volume = 0.5}
   private val explosionSound = new AudioClip(getClass.getResource("/sounds/explosion.mp3").toString) {volume = 0.2}
   // User data
   var username: String = _
   var difficulty: String = _
-  var enemiesHit: Int = _
-  var enemiesMissed: Int = _
   private var score = 0
 
   var stage: Stage = _
@@ -69,6 +68,7 @@ class GameController(private val gamePane: Pane,
 
   // adjust intervals based on difficulty
   def setDifficulty(difficulty: String): Unit = {
+    this.difficulty = difficulty
     difficulty match {
       case "EASY" =>
         laserInterval = 0.5.second
@@ -84,6 +84,10 @@ class GameController(private val gamePane: Pane,
     hideLabelAndStartGame()
   }
 
+  // set username
+  def setUsername(username: String): Unit = {
+    this.username = username
+  }
 
   // ----------GAME LOGIC----------
   // update spaceship image
@@ -119,6 +123,7 @@ class GameController(private val gamePane: Pane,
     enemy.initialize(100, randomX, 100)
 
     enemies += enemy
+    totalSpawned += 1
     gamePane.children.add(enemy.imageView)
   }
 
@@ -145,11 +150,6 @@ class GameController(private val gamePane: Pane,
         if (laser.imageView.boundsInParent.value.intersects(enemy.imageView.boundsInParent.value)) {
           score += 10
           scoreLabel.text = s"Score: $score"
-
-          println(s"Collision detected! Score is now $score")
-          println(s"Laser position: (${laser.imageView.getLayoutX}, ${laser.imageView.getLayoutY})")
-          println(s"Enemy position: (${enemy.imageView.getLayoutX}, ${enemy.imageView.getLayoutY})")
-
 
           val explosionImage = new ImageView(new Image(getClass.getResource("/images/effect/explosion.png").toString))
           explosionImage.scaleX = 0.15
@@ -217,31 +217,6 @@ class GameController(private val gamePane: Pane,
       }
     }
     countdownTimer.start()
-  }
-
-  // end game logic
-  def endGame(): Unit = {
-    gameRunning = false
-    println(s"Game over! Your score: $score")
-    StatusUtil.showMessage(statusLabel, s"Finished! Your score: $score", fade = false)
-    addScoreToLeaderboard()
-
-    val waitTimeline = new Timeline {
-      keyFrames = Seq(
-        KeyFrame(Duration(3000), onFinished = _ => {
-          val resource = getClass.getResource("/com/example/view/GameEndLayout.fxml")
-          val loader = new FXMLLoader(resource, NoDependencyResolver)
-          loader.load()
-          val root = loader.getRoot[jfxs.layout.AnchorPane]
-
-          stage.scene = new Scene(new AnchorPane(root))
-
-          val gameEndController = loader.getController[GameEndController#Controller]()
-          gameEndController.stage = stage
-        })
-      )
-    }
-    waitTimeline.play()
   }
 
   // hide status label and start game
@@ -319,6 +294,45 @@ class GameController(private val gamePane: Pane,
     mainMenuController.stage = stage
   }
 
+  // end game logic
+  def endGame(): Unit = {
+    gameRunning = false
+    println(s"Game over! Your score: $score")
+    StatusUtil.showMessage(statusLabel, s"Finished! Your score: $score", fade = false)
+    addScoreToLeaderboard()
+
+    val waitTimeline = new Timeline {
+      keyFrames = Seq(
+        KeyFrame(Duration(3000), onFinished = _ => {
+          openGameEnd()
+        })
+      )
+    }
+    waitTimeline.play()
+  }
+
+  def openGameEnd(): Unit = {
+    val resource = getClass.getResource("/com/example/view/GameEndLayout.fxml")
+    val loader = new FXMLLoader(resource, NoDependencyResolver)
+    loader.load()
+    val root = loader.getRoot[jfxs.layout.AnchorPane]
+
+    stage.scene = new Scene(new AnchorPane(root))
+
+    var enemiesHit = score / 10
+    var enemiesMissed = totalSpawned - enemiesHit
+
+    val gameEndController = loader.getController[GameEndController#Controller]()
+    gameEndController.stage = stage
+    gameEndController.setResults(
+    username = this.username,
+    totalScore = score,
+    enemiesHit = enemiesHit,
+    enemiesMissed = enemiesMissed,
+    difficultyLevel = this.difficulty
+    )
+  }
+
   def handleMuteAction(event: ActionEvent): Unit = {
     AudioUtil.handleMuteAction(muteBtn, unmuteBtn)
   }
@@ -330,7 +344,7 @@ class GameController(private val gamePane: Pane,
   // add score to leaderboard
   def addScoreToLeaderboard(): Unit = {
     val leaderboard = LeaderboardUtil.loadLeaderboard("leaderboard.txt")
-    val entry = LeaderboardEntry(username, difficulty, score)
+    val entry = LeaderboardEntry(this.username, this.difficulty, score)
     leaderboard.addEntry(entry)
     LeaderboardUtil.saveLeaderboard(leaderboard, "leaderboard.txt")
   }

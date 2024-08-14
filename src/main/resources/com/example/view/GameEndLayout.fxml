@@ -9,6 +9,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controller.GameEndController">
    <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
@@ -16,7 +19,7 @@
          <Image url="@../../../images/background/bg4.jpg" />
       </image>
    </ImageView>
-    <Label fx:id="gameEndText" layoutX="582.0" layoutY="124.0" styleClass="game-end-text" stylesheets="@../../../style/Main.css" text="Result" />
+    <Label fx:id="gameEndText" layoutX="582.0" layoutY="91.0" styleClass="game-end-text" stylesheets="@../../../style/Main.css" text="Result" />
    <GridPane gridLinesVisible="true" layoutX="371.0" layoutY="203.0" prefHeight="315.0" prefWidth="538.0" styleClass="result-grid-pane" stylesheets="@../../../style/Main.css">
      <columnConstraints>
        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -33,10 +36,10 @@
          <Label layoutX="10.0" layoutY="18.0" text="Enemies Hit" GridPane.rowIndex="1" />
          <Label layoutX="10.0" layoutY="18.0" text="Enemies Missed" GridPane.rowIndex="2" />
          <Label text="Total Score" GridPane.rowIndex="3" />
-         <Label layoutX="35.0" layoutY="62.0" GridPane.columnIndex="1" />
-         <Label layoutX="35.0" layoutY="128.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-         <Label layoutX="35.0" layoutY="194.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-         <Label layoutX="35.0" layoutY="260.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         <Label fx:id="difficultyLabel" layoutX="35.0" layoutY="62.0" GridPane.columnIndex="1" />
+         <Label fx:id="enemiesHitLabel" layoutX="35.0" layoutY="128.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         <Label fx:id="enemiesMissedLabel" layoutX="35.0" layoutY="194.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         <Label fx:id="totalScoreLabel1" layoutX="35.0" layoutY="260.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       </children>
    </GridPane>
    <HBox alignment="CENTER" layoutY="510.0" prefHeight="100.0" prefWidth="1280.0">
@@ -46,4 +49,24 @@
           <Button fx:id="quitBtn" onAction="#quitToMainMenu" stylesheets="@../../../style/Main.css" text="Quit" />
       </children>
    </HBox>
+   <VBox alignment="CENTER" layoutX="450.0" layoutY="150.0" prefHeight="50.0" prefWidth="400.0" styleClass="game-end-vbox" stylesheets="@../../../style/Main.css">
+      <children>
+         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <children>
+               <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Congratulations! ">
+                  <font>
+                     <Font name="Lucida Console" size="12.0" />
+                  </font>
+               </Text>
+               <Label fx:id="usernameLabel" stylesheets="@../../../style/Main.css" text="Label" />
+               <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Score is ">
+                  <font>
+                     <Font name="Lucida Console" size="12.0" />
+                  </font>
+               </Text>
+               <Label fx:id="totalScoreLabel" stylesheets="@../../../style/Main.css" text="SCORE" />
+            </children>
+         </HBox>
+      </children>
+   </VBox>
 </AnchorPane>

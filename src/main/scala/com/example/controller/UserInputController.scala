@@ -1,7 +1,6 @@
 package com.example.controller
 
-import com.example.util.{AlertUtil, LeaderboardUtil}
-import com.example.model.{Leaderboard, LeaderboardEntry}
+import com.example.util.AlertUtil
 import javafx.event.ActionEvent
 import javafx.scene.control.{Button, TextField}
 import scalafx.stage.Stage
@@ -23,6 +22,7 @@ class UserInputController(
   var stage: Stage = _
   var dialogStage: Stage = _
   private var difficulty: String = "EASY"
+  private var username: String = ""
 
   // Initialize the difficulty buttons
   easyBtn.setOnAction((e: ActionEvent) => handleDifficultyAction("EASY"))
@@ -34,7 +34,7 @@ class UserInputController(
   }
 
   def handleNextAction(event: ActionEvent): Unit = {
-    val username = usernameField.text.value
+    username += usernameField.text.value
     println(s"Username entered: $username")
     println(s"Difficulty selected: $difficulty")
 
@@ -51,18 +51,11 @@ class UserInputController(
 
     val controller = loader.getController[SpaceshipSelectionController#Controller]()
     controller.stage = stage
-    controller.setDifficulty(difficulty)  // Pass the difficulty to the next controller
+    controller.setDifficulty(difficulty)
+    controller.setUsername(username)
   }
 
   private def handleDifficultyAction(selectedDifficulty: String): Unit = {
     difficulty = selectedDifficulty
-  }
-
-  // Method to save leaderboard (you need to call this when game ends)
-  def saveLeaderboard(score: Int): Unit = {
-    val leaderboard = LeaderboardUtil.loadLeaderboard("leaderboard.txt")
-    val entry = LeaderboardEntry(usernameField.text.value, difficulty, score)
-    leaderboard.addEntry(entry)
-    LeaderboardUtil.saveLeaderboard(leaderboard, "leaderboard.txt")
   }
 }
