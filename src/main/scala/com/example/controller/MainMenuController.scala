@@ -54,6 +54,7 @@ class MainMenuController(
     }
 
     controller.stage = leaderboardStage
+    controller.initialize()
     leaderboardStage.initOwner(stage)
     leaderboardStage.show()
   }

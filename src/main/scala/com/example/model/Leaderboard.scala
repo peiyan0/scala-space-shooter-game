@@ -7,9 +7,7 @@ class Leaderboard {
 
   def addEntry(entry: LeaderboardEntry): Unit = {
     entries += entry
-    // Sort by score in descending order
     val sortedEntries = entries.toList.sortBy(-_.score)
-    // Clear and re-add sorted entries
     entries.clear()
     entries ++= sortedEntries
   }
