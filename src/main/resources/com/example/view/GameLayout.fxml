@@ -19,7 +19,7 @@
                 <Label fx:id="countdownLabel" layoutX="1121.0" layoutY="45.0" style="-fx-font-size: 24px;" stylesheets="@../../../style/Main.css" text="Time: 30s" />
                 <Label fx:id="scoreLabel" layoutX="14.0" layoutY="45.0" style="-fx-font-size: 24px;" stylesheets="@../../../style/Main.css" text="Score: 0" />
                 <Label fx:id="statusLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="320.0" layoutY="242.0" prefWidth="640.0" styleClass="status-label" stylesheets="@../../../style/Main.css" text="status" textAlignment="CENTER" />
-                <ImageView fx:id="spaceshipImageView" fitWidth="150.0" layoutX="625" layoutY="500" preserveRatio="true" />
+                <ImageView fx:id="spaceshipImageView" fitWidth="150.0" layoutX="625" layoutY="500" preserveRatio="true" style="-fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 30, 0.5, 0, 0);" />
                 <ImageView fx:id="enemyImageView" layoutX="440" layoutY="100" visible="false" />
             <Button fx:id="pauseBtn" layoutX="1083.0" layoutY="636.0" mnemonicParsing="false" onAction="#handlePauseAction" stylesheets="@../../../style/Main.css">
                <graphic>
