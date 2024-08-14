@@ -182,8 +182,10 @@
 
 .status-label {
     -fx-font-size: 32px;
-    -fx-text-fill: linear-gradient(to right, #ff7e5f, #feb47b);
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 10, 0.5, 0.0, 0.0);
+    -fx-text-fill: #1a1a1a;
+    -fx-label-padding: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 15, 0.7, 0.0, 0.0);
+    -fx-background-color: radial-gradient(center 50% 50%, radius 60%, #ffebcd, #7a6f18, #000000);
 }
 
 .game-end-text {
@@ -192,17 +194,34 @@
     -fx-stroke-width: 1;
     -fx-text-alignment: center;
     -fx-layout-x: 50;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.6), 35, 0.6, 0, 0);
 }
 
 .result-grid-pane {
-    -fx-background-color: #333;
-    -fx-background-radius: 15px;
+    -fx-background-color: linear-gradient(to bottom right, #2a2a2a, #4a4a4a);
+    -fx-border-color: #a0f2f0;
+    -fx-border-width: 2px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
     -fx-padding: 20px;
-    -fx-border-color: #555;
-    -fx-border-width: 5px;
-    -fx-vertical-grid-lines-visible: true;
+    -fx-hgap: 10px;
+    -fx-vgap: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.6), 35, 0.5, 0, 0);
 }
 
-.game-end-vbox {
-    -fx-font-size: 18px;
+.result-grid-pane .stat-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 20px;
+}
+
+.result-grid-pane .header-label {
+    -fx-text-fill: #42f5ef;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.game-end-hbox {
+    -fx-font-size: 16px;
 }
