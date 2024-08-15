@@ -14,9 +14,9 @@ object LeaderboardUtil {
 
   def loadLeaderboard(fileName: String): Leaderboard = {
     val leaderboard = new Leaderboard()
-    val file = new File(fileName)
-    if (file.exists()) {
-      val source = scala.io.Source.fromFile(fileName)
+    val resourceStream = getClass.getResourceAsStream(s"/$fileName")
+    if (resourceStream != null) {
+      val source = scala.io.Source.fromInputStream(resourceStream)
       source.getLines().foreach { line =>
         val Array(username, difficulty, score) = line.split(",")
         leaderboard.addEntry(LeaderboardEntry(username, difficulty, score.toInt))
