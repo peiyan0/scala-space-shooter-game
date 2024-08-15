@@ -11,7 +11,7 @@ import scalafx.stage.Stage
 import scalafx.util.Duration
 import scala.collection.mutable.ListBuffer
 
-object GameLogic {
+object GameUtil {
   private val laserSound = new AudioClip(getClass.getResource("/sounds/laser.mp3").toString) {volume = 0.2}
   // User data
   var username: String = _

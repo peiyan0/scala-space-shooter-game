@@ -18,7 +18,7 @@ import scalafxml.core.macros.sfxml
 import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 import javafx.{scene => jfxs}
 import com.example.model.{EnemyModel, LaserModel}
-import com.example.util.{AudioUtil, GameLogic, StatusUtil}
+import com.example.util.{AudioUtil, GameUtil, StatusUtil}
 
 @sfxml
 class GameController(private val gamePane: Pane,
@@ -124,18 +124,18 @@ class GameController(private val gamePane: Pane,
     animationTimer = AnimationTimer { now =>
       if (gameRunning) {
         if (now - lastLaserTime > laserInterval.toNanos) {
-          lasers = GameLogic.fireLaser(spaceshipImageView, gamePane, lasers)
+          lasers = GameUtil.fireLaser(spaceshipImageView, gamePane, lasers)
           lastLaserTime = now
         }
         if (now - lastEnemySpawnTime > enemySpawnInterval.toNanos) {
-          val (newEnemies, newTotalSpawned) = GameLogic.spawnEnemies(difficulty, gamePane, enemies, totalSpawned)
+          val (newEnemies, newTotalSpawned) = GameUtil.spawnEnemies(difficulty, gamePane, enemies, totalSpawned)
           enemies = newEnemies
           totalSpawned = newTotalSpawned
           lastEnemySpawnTime = now
         }
         updateLasers()
-        enemies = GameLogic.updateEnemies(gamePane, enemies)
-        val (newLasers, newEnemies, newScore) = GameLogic.checkCollisions(lasers, enemies, spaceshipImageView, gamePane, score, explosionSound)
+        enemies = GameUtil.updateEnemies(gamePane, enemies)
+        val (newLasers, newEnemies, newScore) = GameUtil.checkCollisions(lasers, enemies, spaceshipImageView, gamePane, score, explosionSound)
         lasers = newLasers
         enemies = newEnemies
         score = newScore
@@ -194,7 +194,7 @@ class GameController(private val gamePane: Pane,
     gameRunning = false
     println(s"Game over! Your score: $score")
     StatusUtil.showMessage(statusLabel, s"Finished! Your score: $score", fade = false)
-    GameLogic.addScoreToLeaderboard(this.username, this.difficulty, score)
+    GameUtil.addScoreToLeaderboard(this.username, this.difficulty, score)
 
     val waitTimeline = new Timeline {
       keyFrames = Seq(
