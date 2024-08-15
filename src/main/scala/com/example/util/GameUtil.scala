@@ -46,7 +46,7 @@ object GameUtil {
   }
 
   def createExplosionTimeline(gamePane: Pane, imageToRemove: Seq[ImageView]): Timeline = {
-    new Timeline {
+     new Timeline {
       cycleCount = 1
       keyFrames = Seq(
         KeyFrame(Duration(100), onFinished = handle {

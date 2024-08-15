@@ -6,7 +6,7 @@ import scalafx.scene.input.MouseEvent
 import scalafx.scene.media.AudioClip
 
 object AudioUtil {
-  val pressedSound = new AudioClip(getClass.getResource("/sounds/pressed.mp3").toString) {volume = 0.3}
+  private val pressedSound = new AudioClip(getClass.getResource("/sounds/pressed.mp3").toString) {volume = 0.3}
 
   def pressedSoundAction(): Unit = {
      pressedSound.play()
