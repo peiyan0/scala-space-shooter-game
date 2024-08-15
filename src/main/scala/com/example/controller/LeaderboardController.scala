@@ -1,12 +1,11 @@
 package com.example.controller
 
 import scalafx.event.ActionEvent
-import scalafx.scene.control.{Label, Separator}
-import scalafx.scene.layout.{HBox, Priority, Region, VBox}
+import scalafx.scene.control.Label
+import scalafx.scene.layout.{HBox, VBox}
 import scalafxml.core.macros.sfxml
 import scalafx.stage.Stage
-import com.example.model.{Leaderboard, LeaderboardEntry}
-import com.example.util.LeaderboardUtil
+import com.example.util. LeaderboardUtil
 
 @sfxml
 class LeaderboardController(

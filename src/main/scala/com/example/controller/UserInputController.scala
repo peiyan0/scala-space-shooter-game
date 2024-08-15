@@ -1,6 +1,6 @@
 package com.example.controller
 
-import com.example.util.AlertUtil
+import com.example.util.{AlertUtil, AudioUtil}
 import javafx.event.ActionEvent
 import javafx.scene.control.{Button, TextField}
 import scalafx.stage.Stage
@@ -34,6 +34,7 @@ class UserInputController(
   }
 
   def handleNextAction(event: ActionEvent): Unit = {
+    AudioUtil.pressedSoundAction()
     username += usernameField.text.value
     println(s"Username entered: $username")
     println(s"Difficulty selected: $difficulty")

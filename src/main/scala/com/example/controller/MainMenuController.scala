@@ -23,6 +23,7 @@ class MainMenuController(
   }
 
   def showInstruction(event: ActionEvent): Unit = {
+    AudioUtil.pressedSoundAction()
     val resource = getClass.getResource("/com/example/view/InstructionLayout.fxml")
     val loader = new FXMLLoader(resource, NoDependencyResolver)
     val root = loader.load[jfxs.layout.AnchorPane]
@@ -41,6 +42,7 @@ class MainMenuController(
   }
 
   def showLeaderboard(event: ActionEvent): Unit = {
+    AudioUtil.pressedSoundAction()
     val resource = getClass.getResource("/com/example/view/LeaderboardLayout.fxml")
     val loader = new FXMLLoader(resource, NoDependencyResolver)
     val root = loader.load[jfxs.layout.AnchorPane]
@@ -60,6 +62,7 @@ class MainMenuController(
   }
 
   def handleStartAction(event: ActionEvent): Unit = {
+    AudioUtil.pressedSoundAction()
     val resource = getClass.getResource("/com/example/view/UserInputLayout.fxml")
     val loader = new FXMLLoader(resource, NoDependencyResolver)
     loader.load()

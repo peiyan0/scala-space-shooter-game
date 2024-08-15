@@ -1,5 +1,6 @@
 package com.example.controller
 
+import com.example.util.AudioUtil
 import scalafx.event.ActionEvent
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.stage.Stage
@@ -57,6 +58,7 @@ class SpaceshipSelectionController(private val spaceshipImageView: ImageView) {
   }
 
   def handleDoneAction(event: ActionEvent): Unit = {
+    AudioUtil.pressedSoundAction()
     val resource = getClass.getResource("/com/example/view/GameLayout.fxml")
     val loader = new FXMLLoader(resource, NoDependencyResolver)
     loader.load()

@@ -1,5 +1,6 @@
 package com.example.controller
 
+import com.example.util.AudioUtil
 import scalafx.Includes._
 import scalafx.stage.{Modality, Stage}
 import scalafx.scene.image.Image
@@ -36,6 +37,7 @@ class GameEndController(private var difficultyLabel: Label,
 
   // show the leaderboard screen
   def showLeaderboard(event: ActionEvent): Unit = {
+    AudioUtil.pressedSoundAction()
     val resource = getClass.getResource("/com/example/view/LeaderboardLayout.fxml")
     val loader = new FXMLLoader(resource, NoDependencyResolver)
     val root = loader.load[jfxs.layout.AnchorPane]
@@ -49,6 +51,7 @@ class GameEndController(private var difficultyLabel: Label,
     }
 
     controller.stage = leaderboardStage
+    controller.initialize()
     leaderboardStage.initOwner(stage)
     leaderboardStage.initModality(Modality.ApplicationModal)
     leaderboardStage.show()
@@ -56,6 +59,7 @@ class GameEndController(private var difficultyLabel: Label,
 
   // play next level
   def playNextLevel(event: ActionEvent): Unit = {
+    AudioUtil.pressedSoundAction()
     val nextDifficulty = difficulty match {
       case "EASY" => "MEDIUM"
       case "MEDIUM" => "HARD"

@@ -284,6 +284,7 @@ class GameController(private val gamePane: Pane,
 
   // handle exit action
   def handleExitAction(event: ActionEvent): Unit = {
+    AudioUtil.pressedSoundAction()
     val resource = getClass.getResource("/com/example/view/MainMenuLayout.fxml")
     val loader = new FXMLLoader(resource, NoDependencyResolver)
     loader.load()
