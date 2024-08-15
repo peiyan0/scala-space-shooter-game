@@ -24,14 +24,8 @@ class LeaderboardController(
   }
 
   private def createEntryHBox(username: String, difficulty: String, score: String): HBox = {
-    val usernameLabel = new Label(username) {
-      prefWidth = 200
-    }
-
-    val difficultyLabel = new Label(difficulty) {
-      prefWidth = 200
-    }
-
+    val usernameLabel = new Label(username) {prefWidth = 200}
+    val difficultyLabel = new Label(difficulty) {prefWidth = 200}
     val scoreLabel = new Label(score)
 
     new HBox {
