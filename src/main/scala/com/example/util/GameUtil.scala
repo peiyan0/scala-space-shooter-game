@@ -1,6 +1,6 @@
 package com.example.util
 
-import com.example.model.{LaserModel, RandomEnemy, VerticalEnemy}
+import com.example.model.{LaserModel, LeaderboardEntry, RandomEnemy, VerticalEnemy}
 import scalafx.Includes.handle
 import scalafx.animation.{KeyFrame, Timeline}
 import scalafx.scene.image.{Image, ImageView}
@@ -54,6 +54,14 @@ object GameUtil {
         })
       )
     }
+  }
+
+  // add score to leaderboard
+  def addScoreToLeaderboard(username: String, difficulty: String, score: Int): Unit = {
+    val leaderboard = LeaderboardUtil.loadLeaderboard("leaderboard.txt")
+    val entry = LeaderboardEntry(username, difficulty, score)
+    leaderboard.addEntry(entry)
+    LeaderboardUtil.saveLeaderboard(leaderboard, "leaderboard.txt")
   }
 
 }

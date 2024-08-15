@@ -5,7 +5,8 @@ import java.io._
 
 object LeaderboardUtil {
   def saveLeaderboard(leaderboard: Leaderboard, fileName: String): Unit = {
-    val writer = new PrintWriter(new File(fileName))
+    val resourceFile = new File(getClass.getResource(s"/$fileName").getFile)
+    val writer = new PrintWriter(resourceFile)
     leaderboard.getEntries.foreach { entry =>
       writer.println(s"${entry.username},${entry.difficulty},${entry.score}")
     }

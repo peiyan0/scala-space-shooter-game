@@ -131,7 +131,7 @@ class GameController(private val gamePane: Pane,
       spawnEnemy("Normal")
     }
   }
-  
+
   // update laser positions and remove off-screen lasers
   private def updateLasers(): Unit = {
     lasers.foreach(_.move())
@@ -166,7 +166,7 @@ class GameController(private val gamePane: Pane,
       }
     }
   }
-  
+
   private def checkCollisions1(): Unit = {
     enemies.foreach { enemy =>
       if (spaceshipImageView.boundsInParent.value.intersects(enemy.imageView.boundsInParent.value)) {
@@ -267,7 +267,7 @@ class GameController(private val gamePane: Pane,
     gameRunning = false
     println(s"Game over! Your score: $score")
     StatusUtil.showMessage(statusLabel, s"Finished! Your score: $score", fade = false)
-    addScoreToLeaderboard()
+    GameUtil.addScoreToLeaderboard(this.username, this.difficulty, score)
 
     val waitTimeline = new Timeline {
       keyFrames = Seq(
@@ -300,14 +300,6 @@ class GameController(private val gamePane: Pane,
     enemiesMissed = enemiesMissed,
     difficultyLevel = difficulty
     )
-  }
-
-  // add score to leaderboard
-  def addScoreToLeaderboard(): Unit = {
-    val leaderboard = LeaderboardUtil.loadLeaderboard("leaderboard.txt")
-    val entry = LeaderboardEntry(this.username, this.difficulty, score)
-    leaderboard.addEntry(entry)
-    LeaderboardUtil.saveLeaderboard(leaderboard, "leaderboard.txt")
   }
 
   // handle pause action
