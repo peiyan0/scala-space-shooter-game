@@ -1,22 +1,27 @@
+/*all text*/
 * {
     -fx-font-family: 'Lucida Console';
     -fx-text-fill: #eedb00;
 }
-.button {
+/*all button*/
+Button {
     -fx-background-color: transparent;
+    -fx-font-size: 14px;
 }
-.button:hover {
-    cursor: hand;
-}
-.button:pressed{
+Button:pressed{
     -fx-scale-x: .95;
     -fx-scale-y: .95;
 }
 
-.h-box {
-    -fx-background-color: #555;
-    -fx-opacity: .7;
+/*Buttons inside HBox*/
+.button-bar Button {
+    -fx-padding: 0 20px;
 }
+.button-bar Button:hover {
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 30, 0.65, 0, 0);
+}
+
+/*main menu layout*/
 .quit-button {
     -fx-font-size: 14px;
     -fx-min-width: 75;
@@ -31,7 +36,18 @@
     cursor: hand;
 }
 
-.h-box-button {
+.mute-btn {
+    -fx-background-color: transparent;
+}
+.mute-btn:hover {
+    cursor: hand;
+}
+
+.h-box {
+    -fx-background-color: #555;
+    -fx-opacity: .8;
+}
+.h-box Button {
     -fx-min-width: 200;
     -fx-min-height: 75;
     -fx-background-color: #121;
@@ -41,45 +57,41 @@
     -fx-background-radius: 15px;
     -fx-transition: all 0.3s ease;
 }
-.h-box-button:hover {
-    -fx-font-size: 24px;
+.h-box Button:hover {
     -fx-background-color: #111;
     -fx-scale-x: 1.1;
     -fx-scale-y: 1.1;
     cursor: hand;
+    -fx-text-fill: #eedb00;
+}
+.h-box Button:pressed {
+    -fx-scale-x: .95;
+    -fx-scale-y: .95;
 }
 
-.instruction-box {
-    -fx-min-width: 500;
-    -fx-min-height: 300;
-}
-
-.instruction-button {
-    -fx-background-color: transparent;
-}
-.instruction-button:hover {
-    cursor: hand;
-}
-
-.v-box  .label {
+/*instruction layout*/
+.instruction-v-box  .label {
     -fx-min-width: 400;
-    -fx-font-size: 14px;
-    -fx-background-color: transparent;
+    -fx-font-size: 13px;
+    -fx-padding: 3px 0;
     -fx-text-alignment: center;
     -fx-alignment: center-left;
     -fx-content-display: center;
 }
-
-.mute-btn {
-    -fx-background-color: transparent;
+.instruction-v-box {
+    -fx-background-color: rgba(0,0,0,0.7);
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 20, 0.45, 0, 0);
+    -fx-padding: 20px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #222;
+    -fx-border-width: 5px;
 }
-.mute-btn:hover {
-    cursor: hand;
-}
 
+/*user input layout*/
 .user-input-label {
     -fx-text-alignment: center;
-    -fx-font-size: 20px;
+    -fx-font-size: 18px;
 }
 
 .user-hbox {
@@ -97,9 +109,9 @@
 }
 
 .user-text-field {
-    -fx-min-width: 170;
+    -fx-min-width: 220;
     -fx-text-fill: #fff;
-    -fx-font-size: 11px;
+    -fx-font-size: 14px;
     -fx-background-color: #333;
     -fx-transition: all 0.3s ease;
 }
@@ -122,8 +134,46 @@
     -fx-effect: dropshadow(gaussian, rgba(255, 255, 0, 0.8), 10, 0.5, 0, 0);
 }
 
+/*dialog after submitting username*/
+.dialog-pane {
+    -fx-background-color: #222;
+    -fx-border-color: #555;
+    -fx-border-width: 2px;
+    -fx-padding: 10px;
+    -fx-min-height: 200px;
+}
+.dialog-pane *{
+    -fx-text-fill: #f0f0f0;
+}
+.dialog-pane .header-panel {
+    -fx-background-color: #333;
+    -fx-text-fill: #f0f0f0;
+    -fx-font-size: 14pt;
+    -fx-padding: 10px;
+}
+.dialog-pane .content {
+    -fx-background-color: #222;
+    -fx-font-size: 10pt;
+    -fx-text-fill: #f0f0f0;
+    -fx-alignment: center;
+}
+.dialog-pane .button-bar {
+    -fx-background-color: #222;
+}
+.dialog-pane .button {
+    -fx-background-color: #000;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12pt;
+}
+.dialog-pane .button:hover {
+    -fx-text-fill: #eedb00;
+}
+
+/*ship selection layout*/
 .choose-ship-label {
     -fx-padding: 55px;
+    -fx-font-size: 20px;
 }
 .choose-ship-btn {
     -fx-font-size: 20px;
@@ -137,64 +187,29 @@
     -fx-border-color: #eedb00;
 }
 
-.dialog-pane {
-    -fx-background-color: #222;
-    -fx-border-color: #555;
-    -fx-border-width: 2px;
-    -fx-padding: 10px;
-    -fx-min-height: 200px;
-}
-.dialog-pane *{
-    -fx-text-fill: #f0f0f0;
-}
-
-.dialog-pane .header-panel {
-    -fx-background-color: #333;
-    -fx-text-fill: #f0f0f0;
-    -fx-font-size: 14pt;
-    -fx-padding: 10px;
-}
-
-.dialog-pane .content {
-    -fx-background-color: #222;
-    -fx-font-size: 10pt;
-    -fx-text-fill: #f0f0f0;
-    -fx-alignment: center;
-}
-
-.dialog-pane .button-bar {
-    -fx-background-color: #222;
-}
-
-.dialog-pane .button {
-    -fx-background-color: #000;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 12pt;
-}
-.dialog-pane .button:hover {
-    -fx-text-fill: #eedb00;
-}
-
+/*game layout*/
 .game-h-box {
     -fx-alignment: center;
 }
 
 .status-label {
     -fx-font-size: 32px;
-    -fx-text-fill: #1a1a1a;
-    -fx-label-padding: 12px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 15, 0.7, 0.0, 0.0);
-    -fx-background-color: radial-gradient(center 50% 50%, radius 60%, #ffebcd, #7a6f18, #000000);
+    -fx-label-padding: 13px;
+    -fx-text-fill: #444;
+    -fx-background-color: radial-gradient(center 50% 50%, radius 55%, #ffebcd, #7a6f18, #000000);
 }
 
+/*game end layout*/
 .game-end-text {
     -fx-font-size: 32px;
     -fx-stroke: black;
     -fx-stroke-width: 1;
     -fx-text-alignment: center;
     -fx-layout-x: 50;
-    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.6), 35, 0.6, 0, 0);
+    -fx-text-fill: linear-gradient(from 0% 0% to 0% 100%, yellow 0%, orangered 100%);
+}
+.game-end-hbox {
+    -fx-font-size: 16px;
 }
 
 .result-grid-pane {
@@ -208,20 +223,15 @@
     -fx-vgap: 10px;
     -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.6), 35, 0.5, 0, 0);
 }
-
 .result-grid-pane .stat-label {
     -fx-text-fill: #ffffff;
-    -fx-font-size: 14px;
+    -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-padding: 0 20px;
 }
-
 .result-grid-pane .header-label {
     -fx-text-fill: #42f5ef;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-}
-
-.game-end-hbox {
-    -fx-font-size: 16px;
+    -fx-padding: 0 20px;
 }

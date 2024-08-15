@@ -7,6 +7,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" styleClass="instruction-box" stylesheets="@/style/Main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.controller.UserInputController">
     <children>
@@ -15,11 +16,9 @@
                 <Image url="@../../../images/background/bg4.jpg" />
             </image>
         </ImageView>
-        <Button fx:id="backToStart" alignment="CENTER" contentDisplay="CENTER" layoutX="231.0" layoutY="395.0" mnemonicParsing="false" onAction="#handleBackAction" style="-fx-font-size: 14px;" styleClass="instruction-button" stylesheets="@../../../style/Main.css" text="Back to Start" textAlignment="CENTER" />
-        <Label layoutX="309.0" layoutY="118.0" styleClass="user-input-label" stylesheets="@../../../style/Main.css" text="Enter Username" />
-        <TextField fx:id="usernameField" layoutX="310.0" layoutY="151.0" promptText="Enter a username" styleClass="user-text-field" stylesheets="@../../../style/Main.css" />
-        <Button fx:id="nextBtn" layoutX="463.0" layoutY="395.0" mnemonicParsing="false" onAction="#handleNextAction" style="-fx-font-size: 14px;" styleClass="instruction-button" stylesheets="@../../../style/Main.css" text="Next" />
-      <Label layoutX="286.0" layoutY="226.0" styleClass="user-input-label" stylesheets="@../../../style/Main.css" text="Choose a Difficulty" />
+        <Label layoutX="316.0" layoutY="113.0" styleClass="user-input-label" stylesheets="@../../../style/Main.css" text="Enter Username" />
+        <TextField fx:id="usernameField" layoutX="289.0" layoutY="148.0" promptText="Enter a username" styleClass="user-text-field" stylesheets="@../../../style/Main.css" />
+      <Label layoutX="293.0" layoutY="229.0" styleClass="user-input-label" stylesheets="@../../../style/Main.css" text="Choose a Difficulty" />
       <ButtonBar layoutX="258.0" layoutY="274.0" prefHeight="40.0" prefWidth="200.0" styleClass="difficulty-bar" stylesheets="@../../../style/Main.css">
         <buttons>
           <Button fx:id="easyBtn" mnemonicParsing="false" styleClass="difficulty-btn" stylesheets="@../../../style/Main.css" text="EASY" />
@@ -27,5 +26,11 @@
             <Button fx:id="hardBtn" mnemonicParsing="false" styleClass="difficulty-btn" stylesheets="@../../../style/Main.css" text="HARD" />
         </buttons>
       </ButtonBar>
+      <HBox alignment="TOP_CENTER" layoutY="395.0" prefHeight="50.0" prefWidth="800.0" styleClass="button-bar" stylesheets="@../../../style/Main.css">
+         <children>
+              <Button fx:id="backToStart" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleBackAction" styleClass="text" stylesheets="@../../../style/Main.css" text="BACK TO START" textAlignment="CENTER" />
+              <Button fx:id="nextBtn" mnemonicParsing="false" onAction="#handleNextAction" stylesheets="@../../../style/Main.css" text="NEXT" />
+         </children>
+      </HBox>
     </children>
 </AnchorPane>

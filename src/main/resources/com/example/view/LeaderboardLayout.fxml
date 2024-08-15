@@ -16,9 +16,9 @@
                 <Image url="@../../../images/background/bg4.jpg" />
             </image>
         </ImageView>
-        <VBox fx:id="leaderboardVBox" alignment="TOP_CENTER" layoutX="87.0" layoutY="94.0" maxWidth="620.0" prefHeight="260.0" prefWidth="620.0" styleClass="leaderboard-vbox" stylesheets="@../../../style/Main.css">
+        <VBox fx:id="leaderboardVBox" alignment="TOP_CENTER" layoutX="120.0" layoutY="96.0" maxWidth="620.0" prefHeight="260.0" prefWidth="520.0" styleClass="leaderboard-vbox" stylesheets="@../../../style/Main.css">
          <children>
-            <Separator layoutX="10.0" layoutY="30.0" prefWidth="200.0" valignment="BOTTOM" />
+            <Separator layoutX="10.0" layoutY="30.0" prefWidth="200.0" style="-fx-background-color: #eedb00;" valignment="BOTTOM" />
             <HBox alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="200.0">
                <children>
                   <Label prefWidth="200.0" stylesheets="@../../../style/Main.css" text="Username" />
@@ -26,9 +26,9 @@
                   <Label layoutX="57.0" layoutY="10.0" text="Score" />
                </children>
             </HBox>
-            <Separator prefWidth="200.0" valignment="BOTTOM" />
+            <Separator prefWidth="200.0" style="-fx-background-color: #eedb00;" valignment="BOTTOM" />
          </children>
         </VBox>
-        <Button fx:id="backToStart" alignment="CENTER" contentDisplay="CENTER" layoutX="380.0" layoutY="392.0" mnemonicParsing="false" onAction="#backToGame" styleClass="instruction-button" stylesheets="@/style/Main.css" text="Back" textAlignment="CENTER" />
+        <Button fx:id="backToStart" alignment="CENTER" contentDisplay="CENTER" layoutX="380.0" layoutY="392.0" mnemonicParsing="false" onAction="#backToGame" styleClass="instruction-button" stylesheets="@../../../style/Main.css" text="Back" textAlignment="CENTER" />
     </children>
 </AnchorPane>
