@@ -37,15 +37,15 @@ class GameController(private val gamePane: Pane,
   // Timer
   private var gameRunning = false
   private var animationTimer: AnimationTimer = _
-  private var gameTimeline: Timeline = _
   private var countdownTimer: AnimationTimer = _
+  private var gameTimeline: Timeline = _
   // Object intervals
   private var laserInterval = 0.25.second
   private var enemySpawnInterval = 0.1.second
   private var lastLaserTime = 0L
   private var lastEnemySpawnTime = 0L
-  private var remainingTime = 30
   private var lastUpdateTime = 0L
+  private var remainingTime = 30
   // Game objects
   private var lasers: ListBuffer[LaserModel] = ListBuffer()
   private var enemies: ListBuffer[EnemyModel] = ListBuffer()
@@ -157,7 +157,7 @@ class GameController(private val gamePane: Pane,
   }
 
   // hide status label and start game
-  def hideLabelAndStartGame(): Unit = {
+  private def hideLabelAndStartGame(): Unit = {
     val showTimeline = new Timeline {
       keyFrames = Seq(
         KeyFrame(Duration(4000), onFinished = _ => {
@@ -170,7 +170,7 @@ class GameController(private val gamePane: Pane,
   }
 
   // game reset
-  def reset(): Unit = {
+  private def reset(): Unit = {
     lasers.clear()
     enemies.clear()
     gamePane.children.clear()
@@ -190,7 +190,7 @@ class GameController(private val gamePane: Pane,
   }
 
   // end game logic
-  def endGame(): Unit = {
+  private def endGame(): Unit = {
     gameRunning = false
     println(s"Game over! Your score: $score")
     StatusUtil.showMessage(statusLabel, s"Finished! Your score: $score", fade = false)
@@ -207,7 +207,7 @@ class GameController(private val gamePane: Pane,
   }
 
   // open new stage
-  def openGameEnd(): Unit = {
+  private def openGameEnd(): Unit = {
     val resource = getClass.getResource("/com/example/view/GameEndLayout.fxml")
     val loader = new FXMLLoader(resource, NoDependencyResolver)
     loader.load()

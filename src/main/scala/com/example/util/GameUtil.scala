@@ -20,7 +20,7 @@ object GameUtil {
   // others
   var stage: Stage = _
 
-  def formExplosion(obj: ImageView): ImageView = {
+  private def formExplosion(obj: ImageView): ImageView = {
     val explosionImage = new ImageView(new Image(getClass.getResource("/images/effect/explosion.png").toString))
     explosionImage.scaleX = 0.15
     explosionImage.scaleY = 0.15
@@ -30,7 +30,7 @@ object GameUtil {
   }
 
   // Create and initialize enemy based on type
-  def spawnEnemy(enemyType: String): EnemyModel = {
+  private def spawnEnemy(enemyType: String): EnemyModel = {
     val (imagePath, initValue) = enemyType match {
       case "Normal" => ("/images/enemy/enemy.png", 100)
       case "Random" => ("/images/enemy/random_enemy.png", 80)
@@ -43,6 +43,17 @@ object GameUtil {
     enemy
   }
 
+  private def createExplosionTimeline(gamePane: Pane, imageToRemove: Seq[ImageView]): Timeline = {
+    new Timeline {
+      cycleCount = 1
+      keyFrames = Seq(
+        KeyFrame(Duration(100), onFinished = handle {
+          imageToRemove.foreach(imageView => gamePane.children.remove(imageView))
+        })
+      )
+    }
+  }
+
   // Handle enemy spawning logic based on difficulty
   def spawnEnemies(difficulty: String, gamePane: Pane, enemies: ListBuffer[EnemyModel], totalSpawned: Int): (ListBuffer[EnemyModel], Int) = {
     val enemyTypes = if (difficulty == "HARD") Seq("Normal", "Random") else Seq("Normal")
@@ -52,17 +63,6 @@ object GameUtil {
       gamePane.children.add(enemy.imageView)
     }
     (enemies, totalSpawned + enemyTypes.size)
-  }
-
-  def createExplosionTimeline(gamePane: Pane, imageToRemove: Seq[ImageView]): Timeline = {
-    new Timeline {
-      cycleCount = 1
-      keyFrames = Seq(
-        KeyFrame(Duration(100), onFinished = handle {
-          imageToRemove.foreach(imageView => gamePane.children.remove(imageView))
-        })
-      )
-    }
   }
 
   // add score to leaderboard
