@@ -193,7 +193,7 @@ Button:pressed{
 }
 
 .status-label {
-    -fx-font-size: 32px;
+    -fx-font-size: 28px;
     -fx-label-padding: 13px;
     -fx-text-fill: #444;
     -fx-background-color: radial-gradient(center 50% 50%, radius 55%, #ffebcd, #7a6f18, #000000);
