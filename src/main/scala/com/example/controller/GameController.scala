@@ -17,8 +17,8 @@ import scalafx.Includes._
 import scalafxml.core.macros.sfxml
 import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 import javafx.{scene => jfxs}
-import com.example.model.{EnemyModel, LaserModel, LeaderboardEntry}
-import com.example.util.{AudioUtil, LeaderboardUtil, StatusUtil, GameUtil}
+import com.example.model.{EnemyModel, LaserModel}
+import com.example.util.{AudioUtil, GameLogic, GameUtil, StatusUtil}
 
 @sfxml
 class GameController(private val gamePane: Pane,
@@ -101,86 +101,11 @@ class GameController(private val gamePane: Pane,
   private def handleSpaceshipMovement(event: MouseEvent): Unit = {
     spaceshipImageView.layoutX = event.sceneX - spaceshipImageView.boundsInParent.value.getWidth / 2
   }
-
-  // create and initialize lasers
-  private def fireLaser(): Unit = {
-    val newLasers = GameUtil.fireLaser(spaceshipImageView)
-    newLasers.foreach { laser =>
-      gamePane.children.add(laser.imageView)
-    }
-    lasers ++= newLasers
-  }
-
-  // create and initialize enemy
-  private def spawnEnemy(enemyType: String): Unit = {
-    val enemy = enemyType match {
-      case "Normal" => GameUtil.spawnNormalEnemy()
-      case "Random" => GameUtil.spawnRandomEnemy()
-    }
-    enemies += enemy
-    totalSpawned += 1
-    gamePane.children.add(enemy.imageView)
-  }
-
-  // spawn different enemy models
-  private def spawnEnemies(): Unit = {
-    if (difficulty == "HARD") {
-      spawnEnemy("Normal")
-      spawnEnemy("Random")
-    } else {
-      spawnEnemy("Normal")
-    }
-  }
-
   // update laser positions and remove off-screen lasers
   private def updateLasers(): Unit = {
     lasers.foreach(_.move())
     lasers = lasers.filter(_.imageView.layoutY.value > 0)
     gamePane.children.removeIf(laser => laser.layoutY.value <= 0)
-  }
-  // update enemy positions and remove off-screen enemies
-  private def updateEnemies(): Unit = {
-    enemies.foreach(_.move())
-    enemies = enemies.filter(_.imageView.layoutY.value < gamePane.height.value)
-    gamePane.children.removeIf(node =>
-      enemies.exists(enemy => node == enemy.imageView && enemy.imageView.layoutY.value >= gamePane.height.value)
-    )
-  }
-
-  // check for collisions between lasers and enemies
-  private def checkCollisions(): Unit = {
-    lasers.foreach { laser =>
-      enemies.foreach { enemy =>
-        if (enemy.imageView.boundsInParent.value.intersects(laser.imageView.boundsInParent.value)) {
-          score += 10
-          scoreLabel.text = s"Score: $score"
-          val explosionImage = GameUtil.formExplosion(laser.imageView)
-          gamePane.children.add(explosionImage)
-          explosionSound.play()
-
-          enemies -= enemy
-          lasers -= laser
-          val timer = GameUtil.createExplosionTimeline(gamePane, Seq(explosionImage, laser.imageView, enemy.imageView))
-          timer.play()
-        }
-      }
-    }
-  }
-
-  private def checkCollisions1(): Unit = {
-    enemies.foreach { enemy =>
-      if (spaceshipImageView.boundsInParent.value.intersects(enemy.imageView.boundsInParent.value)) {
-        score -= 10
-        scoreLabel.text = s"Score: $score"
-        val explosionImage = GameUtil.formExplosion(spaceshipImageView)
-        gamePane.children.add(explosionImage)
-
-        explosionSound.play()
-        enemies -= enemy
-        val timer = GameUtil.createExplosionTimeline(gamePane, Seq(explosionImage, enemy.imageView))
-        timer.play()
-      }
-    }
   }
 
 
@@ -201,21 +126,25 @@ class GameController(private val gamePane: Pane,
     animationTimer = AnimationTimer { now =>
       if (gameRunning) {
         if (now - lastLaserTime > laserInterval.toNanos) {
-          fireLaser()
+          lasers = GameLogic.fireLaser(spaceshipImageView, gamePane, lasers)
           lastLaserTime = now
         }
         if (now - lastEnemySpawnTime > enemySpawnInterval.toNanos) {
-          spawnEnemies()
+          val (newEnemies, newTotalSpawned) = GameLogic.spawnEnemies(difficulty, gamePane, enemies, totalSpawned)
+          enemies = newEnemies
+          totalSpawned = newTotalSpawned
           lastEnemySpawnTime = now
         }
         updateLasers()
-        updateEnemies()
-        checkCollisions()
-        checkCollisions1()
+        enemies = GameLogic.updateEnemies(gamePane, enemies)
+        val (newLasers, newEnemies, newScore) = GameLogic.checkCollisions(lasers, enemies, spaceshipImageView, gamePane, score, explosionSound)
+        lasers = newLasers
+        enemies = newEnemies
+        score = newScore
+        scoreLabel.text = s"Score: $score"
       }
     }
     animationTimer.start()
-
     countdownTimer = AnimationTimer { now =>
       if (gameRunning && now - lastUpdateTime > 1.second.toNanos) {
         remainingTime -= 1

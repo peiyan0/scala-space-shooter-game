@@ -1,6 +1,6 @@
 package com.example.util
 
-import com.example.model.{LaserModel, LeaderboardEntry, RandomEnemy, VerticalEnemy}
+import com.example.model.{EnemyModel, LaserModel, LeaderboardEntry, RandomEnemy, VerticalEnemy}
 import scalafx.Includes.handle
 import scalafx.animation.{KeyFrame, Timeline}
 import scalafx.scene.image.{Image, ImageView}
@@ -43,6 +43,12 @@ object GameUtil {
     val randomEnemy = new RandomEnemy("/images/enemy/random_enemy.png")
     randomEnemy.initialize(80)
     randomEnemy
+  }
+  def spawnEnemy(enemyType: String): EnemyModel = {
+    enemyType match {
+      case "Normal" => spawnNormalEnemy()
+      case "Random" => spawnRandomEnemy()
+    }
   }
 
   def createExplosionTimeline(gamePane: Pane, imageToRemove: Seq[ImageView]): Timeline = {
