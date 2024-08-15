@@ -18,7 +18,7 @@ import scalafxml.core.macros.sfxml
 import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 import javafx.{scene => jfxs}
 import com.example.model.{EnemyModel, LaserModel}
-import com.example.util.{AudioUtil, GameLogic, GameUtil, StatusUtil}
+import com.example.util.{AudioUtil, GameLogic, StatusUtil}
 
 @sfxml
 class GameController(private val gamePane: Pane,
@@ -51,9 +51,7 @@ class GameController(private val gamePane: Pane,
   private var enemies: ListBuffer[EnemyModel] = ListBuffer()
   private var totalSpawned: Int = 0
   // Objects sounds
-  private val explosionSound = new AudioClip(getClass.getResource("/sounds/explosion.mp3").toString) {
-    volume = 0.2
-  }
+  private val explosionSound = new AudioClip(getClass.getResource("/sounds/explosion.mp3").toString) {volume = 0.2}
   // User data
   private var score = 0
   var username: String = _
@@ -196,7 +194,7 @@ class GameController(private val gamePane: Pane,
     gameRunning = false
     println(s"Game over! Your score: $score")
     StatusUtil.showMessage(statusLabel, s"Finished! Your score: $score", fade = false)
-    GameUtil.addScoreToLeaderboard(this.username, this.difficulty, score)
+    GameLogic.addScoreToLeaderboard(this.username, this.difficulty, score)
 
     val waitTimeline = new Timeline {
       keyFrames = Seq(
@@ -214,7 +212,6 @@ class GameController(private val gamePane: Pane,
     val loader = new FXMLLoader(resource, NoDependencyResolver)
     loader.load()
     val root = loader.getRoot[jfxs.layout.AnchorPane]
-
     stage.scene = new Scene(new AnchorPane(root))
 
     var enemiesHit = score / 10
