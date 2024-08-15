@@ -1,0 +1,17 @@
+how,HARD,2120
+hyth,HARD,2000
+how,HARD,2000
+ikuiku,HARD,1960
+how,HARD,1950
+hythtj,HARD,1380
+hytht,HARD,1020
+ujyuj,HARD,990
+py,MEDIUM,940
+hyth,MEDIUM,860
+jyjyu,HARD,780
+rth,EASY,550
+py,EASY,540
+hyth,EASY,540
+uykyy,EASY,530
+kuiku,EASY,480
+kuik,EASY,480
