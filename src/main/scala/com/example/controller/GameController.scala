@@ -17,8 +17,8 @@ import scalafx.Includes._
 import scalafxml.core.macros.sfxml
 import scalafxml.core.{FXMLLoader, NoDependencyResolver}
 import javafx.{scene => jfxs}
-import com.example.model.{EnemyModel, LaserModel, LeaderboardEntry, RandomEnemy, VerticalEnemy}
-import com.example.util.{AudioUtil, LeaderboardUtil, StatusUtil}
+import com.example.model.{EnemyModel, LaserModel, LeaderboardEntry}
+import com.example.util.{AudioUtil, LeaderboardUtil, StatusUtil, GameUtil}
 
 @sfxml
 class GameController(private val gamePane: Pane,
@@ -51,9 +51,6 @@ class GameController(private val gamePane: Pane,
   private var enemies: ListBuffer[EnemyModel] = ListBuffer()
   var totalSpawned: Int = 0
   // Objects sounds
-  private val laserSound = new AudioClip(getClass.getResource("/sounds/laser.mp3").toString) {
-    volume = 0.2
-  }
   private val explosionSound = new AudioClip(getClass.getResource("/sounds/explosion.mp3").toString) {
     volume = 0.2
   }
@@ -107,48 +104,31 @@ class GameController(private val gamePane: Pane,
 
   // create and initialize lasers
   private def fireLaser(): Unit = {
-    val laser1 = new LaserModel("/images/effect/laser.png")
-    val laser2 = new LaserModel("/images/effect/laser.png")
-
-    laserSound.play()
-    laser1.initialize(20, 60, spaceshipImageView.layoutX.value + 10, spaceshipImageView.layoutY.value)
-    laser2.initialize(20, 60, spaceshipImageView.layoutX.value + spaceshipImageView.boundsInParent.value.getWidth - 15, spaceshipImageView.layoutY.value)
-
-    lasers += laser1
-    lasers += laser2
-    gamePane.children.addAll(laser1.imageView, laser2.imageView)
+    val newLasers = GameUtil.fireLaser(spaceshipImageView)
+    newLasers.foreach { laser =>
+      gamePane.children.add(laser.imageView)
+    }
+    lasers ++= newLasers
   }
 
   // create and initialize enemy
-  private def spawnRandomEnemy(): Unit = {
-    val randomEnemy = new RandomEnemy("/images/enemy/random_enemy.png")
-    val maxX = gamePane.width.value - 100
-    val randomX = math.random() * maxX
-    randomEnemy.initialize(80, randomX, 100)
-
-    enemies += randomEnemy
-    totalSpawned += 1
-    gamePane.children.add(randomEnemy.imageView)
-
-  }
-  // create and initialize enemy
-  private def spawnNormalEnemy(): Unit = {
-    val enemy = new VerticalEnemy("/images/enemy/enemy.png")
-    val maxX = gamePane.width.value - 100
-    val randomX = math.random() * maxX
-    enemy.initialize(100, randomX, 100)
-
+  private def spawnEnemy(enemyType: String): Unit = {
+    val enemy = enemyType match {
+      case "Normal" => GameUtil.spawnNormalEnemy()
+      case "Random" => GameUtil.spawnRandomEnemy()
+    }
     enemies += enemy
     totalSpawned += 1
     gamePane.children.add(enemy.imageView)
   }
 
-  private def spawnEnemy(): Unit = {
+  // spawn different enemy models
+  private def spawnEnemies(): Unit = {
     if (difficulty == "HARD") {
-      spawnNormalEnemy()
-      spawnRandomEnemy()
+      spawnEnemy("Normal")
+      spawnEnemy("Random")
     } else {
-      spawnNormalEnemy()
+      spawnEnemy("Normal")
     }
   }
   
@@ -158,7 +138,6 @@ class GameController(private val gamePane: Pane,
     lasers = lasers.filter(_.imageView.layoutY.value > 0)
     gamePane.children.removeIf(laser => laser.layoutY.value <= 0)
   }
-
   // update enemy positions and remove off-screen enemies
   private def updateEnemies(): Unit = {
     enemies.foreach(_.move())
@@ -175,22 +154,13 @@ class GameController(private val gamePane: Pane,
         if (enemy.imageView.boundsInParent.value.intersects(laser.imageView.boundsInParent.value)) {
           score += 10
           scoreLabel.text = s"Score: $score"
-
-          val explosionImage = formExplosion(laser.imageView)
+          val explosionImage = GameUtil.formExplosion(laser.imageView)
           gamePane.children.add(explosionImage)
           explosionSound.play()
 
           enemies -= enemy
           lasers -= laser
-
-          val timer = new Timeline {
-            cycleCount = 1
-            keyFrames = Seq(
-              KeyFrame(Duration(100), onFinished = handle {
-                gamePane.children.removeAll(explosionImage, laser.imageView, enemy.imageView)
-              })
-            )
-          }
+          val timer = GameUtil.createExplosionTimeline(gamePane, Seq(explosionImage, laser.imageView, enemy.imageView))
           timer.play()
         }
       }
@@ -202,32 +172,15 @@ class GameController(private val gamePane: Pane,
       if (spaceshipImageView.boundsInParent.value.intersects(enemy.imageView.boundsInParent.value)) {
         score -= 10
         scoreLabel.text = s"Score: $score"
-
-        val explosionImage = formExplosion(spaceshipImageView)
+        val explosionImage = GameUtil.formExplosion(spaceshipImageView)
         gamePane.children.add(explosionImage)
 
         explosionSound.play()
         enemies -= enemy
-        val timer = new Timeline {
-          cycleCount = 1
-          keyFrames = Seq(
-            KeyFrame(Duration(100), onFinished = handle {
-              gamePane.children.removeAll(explosionImage, enemy.imageView)
-            })
-          )
-        }
+        val timer = GameUtil.createExplosionTimeline(gamePane, Seq(explosionImage, enemy.imageView))
         timer.play()
       }
     }
-  }
-
-  private def formExplosion(obj: ImageView): ImageView = {
-    val explosionImage = new ImageView(new Image(getClass.getResource("/images/effect/explosion.png").toString))
-    explosionImage.scaleX = 0.15
-    explosionImage.scaleY = 0.15
-    explosionImage.setLayoutX(obj.getLayoutX + obj.getBoundsInParent.getWidth / 2 - explosionImage.getImage.getWidth / 2)
-    explosionImage.setLayoutY(obj.getLayoutY + obj.getBoundsInParent.getHeight / 2 - explosionImage.getImage.getHeight / 2)
-    explosionImage
   }
 
 
@@ -252,7 +205,7 @@ class GameController(private val gamePane: Pane,
           lastLaserTime = now
         }
         if (now - lastEnemySpawnTime > enemySpawnInterval.toNanos) {
-          spawnEnemy()
+          spawnEnemies()
           lastEnemySpawnTime = now
         }
         updateLasers()

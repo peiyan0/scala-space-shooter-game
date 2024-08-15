@@ -7,18 +7,19 @@ import scalafx.scene.paint.Color
 abstract class EnemyModel(val imagePath: String) {
   val imageView: ImageView = new ImageView(new Image(getClass.getResourceAsStream(imagePath)))
 
-  def initialize(width: Double, x: Double, y: Double): Unit = {
+  def initialize(width: Double): Unit = {
     imageView.fitWidth = width
     imageView.preserveRatio = true
-    imageView.layoutX = x
-    imageView.layoutY = y
+    imageView.layoutX = math.random() * 1180 // 1280 - 100 = 1180 pane width
+    imageView.layoutY = 100
   }
   def move(): Unit
 }
 
+
 class VerticalEnemy(imagePath: String) extends EnemyModel(imagePath) {
-  override def initialize(width: Double, x: Double, y: Double): Unit = {
-    super.initialize(width, x, y)
+  override def initialize(width: Double): Unit = {
+    super.initialize(width)
     imageView.effect = new DropShadow(
       radius = 4, offsetX = 0, offsetY = 0, color = Color.Red
     )
@@ -28,11 +29,12 @@ class VerticalEnemy(imagePath: String) extends EnemyModel(imagePath) {
   }
 }
 
+
 class RandomEnemy(imagePath: String) extends EnemyModel(imagePath) {
   private val random = new scala.util.Random()
 
-  override def initialize(width: Double, x: Double, y: Double): Unit = {
-    super.initialize(width, x, y)
+  override def initialize(width: Double): Unit = {
+    super.initialize(width)
     imageView.effect = new SepiaTone(0.5)
   }
 
