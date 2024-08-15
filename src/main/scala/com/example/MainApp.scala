@@ -12,13 +12,14 @@ import scalafx.scene.media.MediaPlayer.Status
 import scalafx.scene.media.{Media, MediaPlayer}
 
 object MainApp extends JFXApp {
-  private val rootResource = getClass.getResourceAsStream("/com/example/view/RootLayout.fxml")
-  private val roots = loader.getRoot[jfxs.layout.BorderPane]
-  private val cssResource = getClass.getResource("/style/Main.css")
-  private val backgroundMusic = new Media(getClass.getResource("/sounds/MainBg.mp3").toString)
+  val rootResource = getClass.getResourceAsStream("/com/example/view/RootLayout.fxml")
   val loader = new FXMLLoader(null, NoDependencyResolver)
   loader.load(rootResource)
+  val roots = loader.getRoot[jfxs.layout.BorderPane]
+  val cssResource = getClass.getResource("/style/Main.css")
   roots.stylesheets = List(cssResource.toExternalForm)
+
+  val backgroundMusic = new Media(getClass.getResource("/sounds/MainBg.mp3").toString)
   val mediaPlayer = new MediaPlayer(backgroundMusic)
   mediaPlayer.setCycleCount(MediaPlayer.Indefinite)
 
