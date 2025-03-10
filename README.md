@@ -1,7 +1,7 @@
 ## Scala Space Shooting Game
 
 ### Description
-- simple space shooting game developed using Scala and ScalaFX. 
+- simple space shooter game developed using Scala and ScalaFX. 
 
 ### Features
 - Player-controlled spaceship
