@@ -23,7 +23,7 @@
 - [**Images**](src/main/resources/images): `background`, `effect`, `enemy`, `icons`, `spaceship`
 
 ### YouTube Demo
-- [Scala Space Shooting Game](https://youtu.be/gxv_pGzMu0c)
+- [Scala Space Shooter Game](https://youtu.be/gxv_pGzMu0c)
 
 ### Project Structure
 ```
